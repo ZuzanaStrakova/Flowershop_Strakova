@@ -1,8 +1,69 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Flowershop_Strakova.Entities;
+
+@model ProductListViewModel
+@{
+    // Layout = "_Layout.cshtml";
+    ViewBag.Title = "Seznam produktů";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@functions {
+    public void RenderCategoryOptions(List<Category> categories, int? selectedCategoryId, int level)
+    {
+        foreach (var cat in categories)
+        {
+            var indent = new string('-', level * 2);
+
+            WriteLiteral("<option value=\"");
+            Write(cat.Id);
+            WriteLiteral("\"");
+            if (selectedCategoryId == cat.Id)
+            {
+                WriteLiteral(" selected");
+            }
+            WriteLiteral(">");
+            Write($"{indent} {cat.Name}");
+            WriteLiteral("</option>");
+
+            if (cat.Children != null && cat.Children.Any())
+            {
+                RenderCategoryOptions(cat.Children, selectedCategoryId, level + 1);
+            }
+        }
+    }
+}
+
+<h2>Seznam produktů</h2>
+
+<!-- Filtrovací formulář -->
+<form method="get" asp-action="Index" asp-controller="Shop">
+    <label for="categoryId">Kategorie:</label>
+    <select name="categoryId" id="categoryId">
+        <!-- Možnost zobrazit všechny produkty -->
+        <option value="">-- Všechny kategorie --</option>
+
+        <!-- Rekurzivní vykreslení stromu kategorií -->
+        RenderCategoryOptions(Model.Categories, Model.SelectedCategoryId, 0)
+    </select>
+
+    <button type="submit">Filtrovat</button>
+</form>
+
+<hr />
+
+<!-- Výpis vyfiltrovaných produktů -->
+@if (Model.Products != null && Model.Products.Any())
+{
+    <ul>
+        @foreach (var product in Model.Products)
+        {
+            <li>
+                <strong>@product.Name</strong>
+                - @product.Price Kč
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Žádné produkty k zobrazení.</p>
+}

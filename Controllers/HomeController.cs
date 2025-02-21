@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Flowershop_Strakova.Models;
+using Flowershop_Strakova.Entities;
 
 namespace Flowershop_Strakova.Controllers;
 
@@ -15,7 +16,25 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var model = new ProductListViewModel();
+        model.Categories = new List<Category>
+        {
+            new Category { Id = 1, Name = "Flowers" },
+            new Category { Id = 2, Name = "Plants" },
+            new Category { Id = 3, Name = "Pots" }
+        };
+
+        model.Products = new List<Product>
+        {
+            new Product(1, "Rose", 1, "Red rose", 10, 100, "rose.jpg"),
+            new Product(2, "Tulip", 1, "Yellow tulip", 5, 50, "tulip.jpg"),
+            new Product(3, "Cactus", 2, "Green cactus", 15, 30, "cactus.jpg"),
+            new Product(4, "Orchid", 2, "Purple orchid", 20, 20, "orchid.jpg"),
+            new Product(5, "Ceramic pot", 3, "Blue ceramic pot", 25, 10, "ceramic-pot.jpg"),
+            new Product(6, "Plastic pot", 3, "Green plastic pot", 5, 100, "plastic-pot.jpg")
+        };
+
+        return View(model);
     }
 
     public IActionResult Privacy()
