@@ -1,12 +1,20 @@
-﻿namespace Flowershop_Strakova.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Flowershop_Strakova.Entities
 {
+    [Table("Categories")]
     public class Category
     {
+        [Key]
+        [Column("Id")]
         public int Id { get; set; }
+        [Column("Name")]
         public string Name { get; set; }
+        [Column("ParentCategoryId")]
         public int? ParentCategoryId { get; set; }
 
-        public List<Category> Children { get; set; } = new List<Category>();
+        public List<Category> Children { get; set; } = new List<Category>();      // nemá být virtual??
 
 
         public Category()

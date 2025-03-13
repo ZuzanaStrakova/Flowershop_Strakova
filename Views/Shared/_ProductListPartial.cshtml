@@ -1,0 +1,160 @@
+﻿.product-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.product-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+    position: relative;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.product-top-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-badge {
+    background-color: #f8c200;
+    color: #fff;
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.rating-stars {
+    color: #ffc107; /* barva hvězdiček */
+}
+
+.star {
+    font-size: 1.2rem;
+    color: #ccc;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
+.product-title {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.product-price .price {
+    color: #e53935;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.product-buy {
+    margin-top: 0.5rem;
+}
+
+.product-buy .btn {
+    width: 100%;
+}
+
+.product-availability {
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.in-stock {
+    color: #388e3c;
+}
+
+.out-of-stock {
+    color: #e53935;
+}
+
+
+@model IEnumerable<Flowershop_Strakova.Models.ProductViewModel>
+
+<div class="product-list-container">
+    @foreach (var product in Model)
+    {
+        <div class="product-item">
+            <!-- Obrázek produktu -->
+            <div class="product-image">
+                <a href="@Url.Action("Detail", "Product", new { id = product.Id })">
+                    <img src="@product.ImageUrl" alt="@product.Name" />
+                </a>
+            </div>
+
+            <!-- Top 5, rating a počet hodnocení -->
+            @* Příklad: Pokud chcete zobrazit nějakou “TOP” informaci, rating a počet hodnocení *@
+            <div class="product-top-info">
+                <div class="product-rating">
+                    <span class="rating-value">@product.Rating.ToString("0.0")</span>
+                    <span class="rating-stars">
+                        @* Jednoduché vykreslení hvězdiček (např. 5 hvězdiček) *@
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="star @(i <= product.Rating ? "filled" : "")">★</span>
+                        }
+                    </span>
+                    <span class="rating-count">(@product.RatingCount)</span>
+                </div>
+            </div>
+
+            <!-- Název produktu -->
+            <h3 class="product-title">
+                <a href="@Url.Action("Detail", "Product", new { id = product.Id })">
+                    @product.Name
+                </a>
+            </h3>
+
+            <!-- Popis produktu (volitelně) -->
+            @if (!string.IsNullOrEmpty(product.Description))
+            {
+                <p class="product-description">@product.Description</p>
+            }
+
+            <!-- Cena produktu -->
+            <div class="product-price">
+                @* Zde lze formátovat dle potřeby (měna, atd.) *@
+                <span class="price">@string.Format("{0:N0} Kč", product.Price)</span>
+            </div>
+
+            <!-- Tlačítko koupit / přidat do košíku -->
+            <div class="product-buy">
+                <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                    <input type="hidden" name="productId" value="@product.Id" />
+                    <button type="submit" class="btn btn-primary">Koupit</button>
+                </form>
+            </div>
+
+            <!-- Dostupnost produktu -->
+            <div class="product-availability">
+                @if (product.StorageAmount > 10)
+                {
+                    <span class="in-stock">Skladem > 10 ks</span>
+                }
+                else if (product.StorageAmount > 0)
+                {
+                    <span class="in-stock">Skladem @product.StorageAmount ks</span>
+                }
+                else
+                {
+                    <span class="out-of-stock">Vyprodáno</span>
+                }
+            </div>
+        </div>
+    }
+</div>
