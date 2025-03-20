@@ -12,7 +12,7 @@ namespace Flowershop_Strakova.Entities
         public string Name { get; set; }
         [Column("CategoryId")]
         public int CategoryId { get; set; }
-        [Column("Descriptioon")]
+        [Column("Description")]
         public string Description { get; set; }
         [Column("Price")]
         public decimal Price { get; set; }

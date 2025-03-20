@@ -9,6 +9,5 @@ create table Account (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Username varchar(64) not null,
     Password varchar(128) not null,
-    Role varchar(64) not null,
-    Token varchar(128) default null
+    Role varchar(64) not null
 )

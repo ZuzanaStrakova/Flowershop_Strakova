@@ -13,8 +13,6 @@ namespace Flowershop_Strakova.Entities
         public string Password { get; set; }
         [Column("Role")]
         public string Role { get; set; }
-        [Column("Token")]
-        public string Token { get; set; }
 
         public Account()
         {
@@ -22,7 +20,6 @@ namespace Flowershop_Strakova.Entities
             Username = string.Empty;
             Password = string.Empty;
             Role = string.Empty;
-            Token = string.Empty;
         }
 
         public Account(int id, string username, string password, string role, string token)
@@ -31,7 +28,6 @@ namespace Flowershop_Strakova.Entities
             Username = username;
             Password = password;
             Role = role;
-            Token = token;
         }
     }
 }
