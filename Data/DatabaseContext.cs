@@ -8,6 +8,7 @@ namespace Flowershop_Strakova.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
 
         override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

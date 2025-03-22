@@ -81,5 +81,28 @@ namespace Flowershop_Strakova.Controllers
             // Zobrazíme výsledek ve view "Index", které očekává kolekci produktů
             return View("Index", products);
         }
+
+
+
+        public IActionResult CategorySelected(int selectedCategory)
+        {
+            var products = _context.Products
+                             .Where(c => c.CategoryId == selectedCategory)
+                             .Select(p => new ProductViewModel
+                             {
+                                 Id = p.Id,
+                                 Name = p.Name,
+                                 Description = p.Description,
+                                 Price = p.Price,
+                                 ImageUrl = p.ImageUrl,
+                                 Rating = p.Rating,
+                                 RatingCount = p.RatingCount,
+                                 IsTopProduct = p.IsTopProduct,
+                                 StorageAmount = p.StorageAmount
+                             })
+                             .ToList();
+
+            return View("Index", products);
+        }
     }
 }

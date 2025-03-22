@@ -98,11 +98,21 @@
                         <div id="collapseOne" class="collapse" data-parent="#accordion">
                             <div class="card-body p-1">
                                 <ul class="list-unstyled">
-                                    <li><a href="#">Růže</a></li>
-                                    <li><a href="#">Tulipány</a></li>
-                                    <li><a href="#">Gerbery</a></li>
-                                    <li><a href="#">Lilie</a></li>
-                                    <li><a href="#">Chryzantémy</a></li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 11 })">Růže</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 12 })">Tulipány</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 13 })">Gerbery</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 14 })">Lilie</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 15 })">Chryzantémy</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -119,14 +129,20 @@
                         <div id="collapseTwo" class="collapse" data-parent="#accordion">
                             <div class="card-body p-1">
                                 <ul class="list-unstyled">
-                                    <li><a href="#">Dárkové kytice</a></li>
-                                    <li><a href="#">Slavnostní aranžmá</a></li>
-                                    <li><a href="#">Firemní aranžmá</a></li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 21 })">Dárkové kytice</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 22 })">Slavnostní aranžmá</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 23 })">Firemní aranžmá</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <!-- Další hlavní kategorie – např. Pokojové rostliny, Svatební květiny atd. -->
+                    <!-- Pokojové a kancelářské rostliny -->
                     <div class="card">
                         <div class="card-header p-1" id="headingThree">
                             <h6 class="mb-0">
@@ -138,11 +154,21 @@
                         <div id="collapseThree" class="collapse" data-parent="#accordion">
                             <div class="card-body p-1">
                                 <ul class="list-unstyled">
-                                    <li><a href="#">Sukulenty a kaktusy</a></li>
-                                    <li><a href="#">Orchideje</a></li>
-                                    <li><a href="#">Fikusy a palmy</a></li>
-                                    <li><a href="#">Bonsaje</a></li>
-                                    <li><a href="#">Bylinky a aromatické rostliny</a></li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 31 })">Sukulenty a kaktusy</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 32 })">Orchideje</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 33 })">Fikusy a palmy</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 34 })">Bonsaje</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 35 })">Bylinky a aromatické rostliny</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -150,6 +176,7 @@
                     <!-- Přidejte další kategorie dle potřeby -->
                 </div>
             </nav>
+
 
             <!-- Hlavní sekce pro zobrazení produktů -->
             <main class="col-md-9">
