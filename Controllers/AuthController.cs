@@ -33,6 +33,7 @@ namespace Flowershop_Strakova.Controllers
             }
 
             HttpContext.Session.SetString("User", loginViewModel.Username);
+            HttpContext.Session.SetString("Role", account.Role);
             HttpContext.Session.SetInt32("UserId", account.Id);
 
             return RedirectToAction("Index", "Products");

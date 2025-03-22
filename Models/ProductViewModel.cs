@@ -8,7 +8,7 @@
         public decimal Price { get; set; }
         public int StorageAmount { get; set; }
         public string ImageUrl { get; set; }
-        public double Rating { get; set; }
+        public int Rating { get; set; }
         public int RatingCount { get; set; }
         public bool IsTopProduct { get; set; }
 
@@ -26,7 +26,7 @@
             IsTopProduct = false;
         }
 
-        public ProductViewModel(int id, string name, string description, decimal price, int storageAmount, string imageUrl, double rating, int ratingCount, bool isTopProduct)
+        public ProductViewModel(int id, string name, string description, decimal price, int storageAmount, string imageUrl, int rating, int ratingCount, bool isTopProduct)
         {
             Id = id;
             Name = name;

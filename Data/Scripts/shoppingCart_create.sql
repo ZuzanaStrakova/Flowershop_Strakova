@@ -16,3 +16,5 @@ CREATE TABLE ShoppingCarts
     FOREIGN KEY (AccountId) REFERENCES Account(Id),
 	FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
+
+select * from ShoppingCarts

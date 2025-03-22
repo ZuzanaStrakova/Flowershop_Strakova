@@ -13,6 +13,12 @@ namespace Flowershop_Strakova.Entities
         public string Password { get; set; }
         [Column("Role")]
         public string Role { get; set; }
+        [Column("Adress")]
+        public string Adress { get; set; }
+        [Column("Email")]
+        public string Email { get; set; }
+        [Column("Phone")]
+        public string Phone { get; set; }
 
         public Account()
         {
@@ -20,14 +26,20 @@ namespace Flowershop_Strakova.Entities
             Username = string.Empty;
             Password = string.Empty;
             Role = string.Empty;
+            Adress = string.Empty;
+            Email = string.Empty;
+            Phone = string.Empty;
         }
 
-        public Account(int id, string username, string password, string role, string token)
+        public Account(int id, string username, string password, string role, string adress, string email, string phone)
         {
             Id= id;
             Username = username;
             Password = password;
             Role = role;
+            Adress = string.Empty;
+            Email = string.Empty;
+            Phone = string.Empty;
         }
     }
 }

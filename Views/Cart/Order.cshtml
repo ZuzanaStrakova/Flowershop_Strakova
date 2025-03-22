@@ -1,0 +1,573 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "FlowerShop";
+}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlowerShop</title>
+    <!-- Google Font (pouze Neuton pro logo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet" />
+
+    <!-- Odkaz na Font Awesome pro ikony -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-..."
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <style>
+        /* RESET A ZÁKLADNÍ NASTAVENÍ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: sans-serif;
+            color: #9D4C83;
+            background-color: #fff; /* Bílé pozadí */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /********************************************
+                 * HLAVIČKA – BÍLÁ ČÁST
+                 ********************************************/
+        header {
+            width: 100%;
+            background-color: #fff;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Neuton', serif;
+            font-size: 3rem;
+            color: #9D4C83;
+            font-weight: bold;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+            .search-container input[type="search"] {
+                font-size: 1.2rem;
+                padding: 0.6rem 2.2rem 0.6rem 1rem;
+                border: 1px solid #9D4C83;
+                border-radius: 4px;
+                background-color: #fff;
+            }
+
+            .search-container input::placeholder {
+                color: #9D4C83;
+            }
+
+            .search-container .fa-search {
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #9D4C83;
+                cursor: pointer;
+                font-size: 1.5rem;
+            }
+
+        .icon-btn {
+            color: #9D4C83;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .user-name {
+            margin-left: 0.3rem;
+            font-size: 1.2rem;
+        }
+
+        /********************************************
+                 * RŮŽOVÁ SEKCE (NAV BAR)
+                 ********************************************/
+        .pink-section {
+            background-color: #FFF3FB;
+            position: relative;
+            padding-bottom: 10rem; /* necháme mezeru pro vlku dole */
+        }
+
+        .menu-nav {
+            display: flex;
+            justify-content: center;
+            font-size: 1.4rem;
+            gap: 6rem;
+            padding: 0.8rem 0;
+        }
+
+            .menu-nav a {
+                color: #9D4C83;
+                font-weight: 600;
+                padding: 0.5rem 0.3rem;
+            }
+
+                .menu-nav a i {
+                    margin-left: 0.3rem;
+                    font-size: 1.4rem;
+                }
+
+                .menu-nav a:hover {
+                    background-color: #fcd5e5;
+                    border-radius: 4px;
+                }
+
+        .nav-separator {
+            border: none;
+            height: 1px;
+            background-color: #9D4C83;
+            max-width: 80%;
+            margin: 0 auto 3rem;
+        }
+
+        /********************************************
+                 * NADPIS A OBSAH DORUČENÍ + PLATBY
+                 ********************************************/
+        .delivery-container,
+        .payment-container {
+            margin-left: 25%; /* zmenšíme tabulky */
+            margin-right: 25%;
+        }
+
+            .delivery-container h1 {
+                font-size: 1.8rem;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .delivery-container h2,
+            .payment-container h2 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+                text-align: left;
+            }
+
+        /********************************************
+                 * TABULKA DORUČENÍ
+                 ********************************************/
+        .delivery-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 1rem; /* mezera mezi řádky */
+            margin-bottom: 1rem;
+        }
+            /* V <tr> a <td> NEDÁVÁME border – dáme ho do labelu */
+            .delivery-table tbody tr {
+                border: none;
+                background: none;
+            }
+
+            .delivery-table td {
+                padding: 0; /* veškerý padding bude v labelu */
+            }
+
+        /* label s class .delivery-row => "karta" položky */
+        label.delivery-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 1rem; /* vnitřní mezera */
+            background-color: #fff; /* bílé pozadí */
+            border: 1px solid #9D4C83; /* fialový rámeček */
+            border-radius: 8px; /* kulaté rohy */
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+            /* Zvýraznění při najetí myší */
+            label.delivery-row:hover {
+                box-shadow: 0 0 6px rgba(0,0,0,0.1);
+            }
+
+        .delivery-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .delivery-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .delivery-price {
+            font-weight: bold;
+        }
+
+            .delivery-price.free {
+                color: green;
+            }
+
+        /* Čtverečkové radio */
+        input[type="radio"].square-check {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0;
+            border: 2px solid #9D4C83;
+            border-radius: 4px;
+            background-color: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+            input[type="radio"].square-check:hover {
+                border-color: #7d2e65;
+            }
+
+            input[type="radio"].square-check:checked {
+                background-color: #9D4C83;
+            }
+
+                input[type="radio"].square-check:checked::after {
+                    content: '';
+                    position: absolute;
+                    top: 2px;
+                    left: 5px;
+                    width: 3px;
+                    height: 7px;
+                    border: solid #fff;
+                    border-width: 0 2px 2px 0;
+                    transform: rotate(45deg);
+                }
+
+        /********************************************
+                 * BÍLÁ SEKCE – PLATBA
+                 ********************************************/
+        .payment-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 1rem;
+        }
+            /* Bez border v <tr> a <td> */
+            .payment-table tbody tr {
+                border: none;
+                background: none;
+            }
+
+            .payment-table td {
+                padding: 0;
+            }
+
+        /* label pro každou položku */
+        label.payment-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 1rem;
+            background-color: #FFF3FB;
+            border: 1px solid #9D4C83;
+            border-radius: 8px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+            /* Hover efekt */
+            label.payment-row:hover {
+                box-shadow: 0 0 6px rgba(0,0,0,0.1);
+            }
+
+        .payment-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .payment-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-table input[type="radio"].square-check {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0;
+            border: 2px solid #9D4C83;
+            border-radius: 4px;
+            background-color: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+            .payment-table input[type="radio"].square-check:hover {
+                border-color: #7d2e65;
+            }
+
+            .payment-table input[type="radio"].square-check:checked {
+                background-color: #9D4C83;
+            }
+
+                .payment-table input[type="radio"].square-check:checked::after {
+                    content: '';
+                    position: absolute;
+                    top: 2px;
+                    left: 5px;
+                    width: 3px;
+                    height: 7px;
+                    border: solid #fff;
+                    border-width: 0 2px 2px 0;
+                    transform: rotate(45deg);
+                }
+
+        /********************************************
+                 * TLAČÍTKO "POKRAČOVAT"
+                 ********************************************/
+        .pay-button {
+            background-color: #FFD5F2;
+            color: #9D4C83;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem; /* více místa pod tlačítkem */
+            display: block;
+            margin-left: auto; /* zarovnání doprava */
+        }
+
+            .pay-button:hover {
+                background-color: #ffcaee;
+            }
+
+        /********************************************
+                 * FOOTER
+                 ********************************************/
+        footer {
+            border-top: 1px solid #ccc;
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+
+        /********************************************
+                 * VLNA DOLE
+                 ********************************************/
+        .wave {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+    </style>
+</head>
+<body>
+    <!-- HLAVIČKA -->
+    <header>
+        <div class="header-top">
+            <div class="logo">FlowerShop</div>
+            <div class="top-nav-right">
+                <div class="search-container">
+                    <input type="search" placeholder="Hledat..." />
+                    <i class="fa fa-search"></i>
+                </div>
+                <i class="fa fa-shopping-cart icon-btn"></i>
+                <i class="fa fa-user icon-btn"></i>
+                <span class="user-name">Zuz Honková</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- RŮŽOVÁ SEKCE s NAV BAR -->
+    <section class="pink-section">
+        <nav class="menu-nav">
+            <a href="#">
+                Řezané květiny
+                <i class="fa fa-caret-down"></i>
+            </a>
+            <a href="#">
+                Květinové kytice a aranže
+                <i class="fa fa-caret-down"></i>
+            </a>
+            <a href="#">
+                Pokojové a kancelářské rostliny
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </nav>
+        <hr class="nav-separator" />
+
+        <!-- DORUČENÍ -->
+        <div class="delivery-container">
+            <h1>Vyberte doručení a způsob platby</h1>
+
+            <h2>Jak vám máme květiny doručit?</h2>
+            <table class="delivery-table">
+                <tbody>
+                    <!-- 1. Řádek -->
+                    <tr>
+                        <td>
+                            <label for="delivery-pickup" class="delivery-row">
+                                <div class="delivery-left">
+                                    <i class="fa fa-user"></i>
+                                    <span>Osobní odběr</span>
+                                </div>
+                                <div class="delivery-right">
+                                    <span class="delivery-price free">Zdarma</span>
+                                    <input type="radio" id="delivery-pickup" name="delivery"
+                                           value="pickup" checked class="square-check" />
+                                </div>
+                            </label>
+                        </td>
+                    </tr>
+                    <!-- 2. Řádek -->
+                    <tr>
+                        <td>
+                            <label for="delivery-courier" class="delivery-row">
+                                <div class="delivery-left">
+                                    <i class="fa fa-truck"></i>
+                                    <span>Osobní doručení</span>
+                                </div>
+                                <div class="delivery-right">
+                                    <span class="delivery-price">250 Kč</span>
+                                    <input type="radio" id="delivery-courier" name="delivery"
+                                           value="courier" class="square-check" />
+                                </div>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- VLNA DOLE -->
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;">
+                </path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- BÍLÁ SEKCE: PLATBA -->
+    <section class="white-section">
+        <div class="payment-container">
+            <h2>Jak byste si přáli zaplatit?</h2>
+            <table class="payment-table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="payment-bank" class="payment-row">
+                                <div class="payment-left">
+                                    <i class="fa fa-university"></i>
+                                    <span>Bankovní převod</span>
+                                </div>
+                                <div class="payment-right">
+                                    <input type="radio" id="payment-bank" name="payment"
+                                           value="bank-transfer" class="square-check" />
+                                </div>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="payment-card" class="payment-row">
+                                <div class="payment-left">
+                                    <i class="fa fa-credit-card"></i>
+                                    <span>Platba kartou</span>
+                                </div>
+                                <div class="payment-right">
+                                    <input type="radio" id="payment-card" name="payment"
+                                           value="card" class="square-check" />
+                                </div>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="payment-cod" class="payment-row">
+                                <div class="payment-left">
+                                    <i class="fa fa-money-bill-wave"></i>
+                                    <span>Hotově při předání</span>
+                                </div>
+                                <div class="payment-right">
+                                    <input type="radio" id="payment-cod" name="payment"
+                                           value="cod" class="square-check" />
+                                </div>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="payment-gpay" class="payment-row">
+                                <div class="payment-left">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg"
+                                         alt="Google Pay"
+                                         style="height: 1.2rem;" />
+                                    <span>Google Pay</span>
+                                </div>
+                                <div class="payment-right">
+                                    <input type="radio" id="payment-gpay" name="payment"
+                                           value="gpay" class="square-check" />
+                                </div>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- TLAČÍTKO ZAROVNANÉ VPRAVO -->
+            <a class="pay-button" href="@Url.Action("Order", "Cart")">Pokračovat</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-top footer text-muted">
+        <div>
+            © 2025 - Flowershop_Strakova - <a href="/Home/Privacy">Privacy</a>
+        </div>
+    </footer>
+</body>
+</html>

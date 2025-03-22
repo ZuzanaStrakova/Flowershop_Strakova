@@ -1,36 +1,227 @@
 ﻿@using Flowershop_Strakova.Models
 @model LoginViewModel
+
 @{
+    Layout = null;
     ViewData["Title"] = "Login";
 }
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-@TempData["MessageType"] mt-2">
-        @TempData["Message"]
-    </div>
-}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlowerShop – Přihlášení</title>
 
-<form asp-action="Login" class="mt-2 mb-2">
-    <div class="row justify-content-center mb-2">
-        <label asp-for="Username" class="col-sm-1 col-form-label">Username</label>
-        <div class="col-sm-4">
-            <input asp-for="Username" type="text" class="form-control">
-            <span asp-validation-for="Username" class="text-danger xinvalid-feedback"></span>
+    <!-- Google Font pro nápis FlowerShop -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet" />
+
+    <style>
+        /**********************************************
+                         * RESET + ZÁKLADY
+                         **********************************************/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: sans-serif;
+            color: #9D4C83;
+            background-color: #fff; /* bílá pro spodní část */
+        }
+
+        /**********************************************
+                         * HEADER (BÍLÝ PRUH NAHOŘE)
+                         **********************************************/
+        header {
+            background-color: #fff;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Neuton', serif;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #9D4C83;
+        }
+
+        /**********************************************
+                         * RŮŽOVÁ SEKCE S VLNOU
+                         **********************************************/
+        .pink-section {
+            position: relative;
+            height: 500px; /* Výška růžové části */
+            background-color: #FFE7F5;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+        /**********************************************
+                         * LOGIN KONTEJNER
+                         **********************************************/
+        .login-container {
+            position: relative;
+            max-width: 440px;
+            margin: -260px auto 0; /* posun nahoru přes vlnu */
+            padding-bottom: 4rem;
+        }
+
+        /* Samotný box s bílým pozadím – přidána min. výška pro "obdélník" */
+        .login-box {
+            background-color: #fff;
+            border: 2px solid #9D4C83;
+            border-radius: 12px;
+            text-align: center;
+            padding: 2rem;
+            min-height: 450px; /* zvětšená výška boxu */
+        }
+
+            .login-box h1 {
+                font-size: 2rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .login-box p.subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+        /**********************************************
+                         * FORMULÁŘ
+                         **********************************************/
+        form.login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding-top: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                color: #9D4C83;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 0.8rem;
+                border: 1px solid #9D4C83;
+                border-radius: 4px;
+                background-color: #fff;
+                color: #9D4C83;
+                font-size: 1rem;
+            }
+
+                .form-group input::placeholder {
+                    color: #9D4C83;
+                }
+
+        /* ASP.NET Core chybové hlášky */
+        .text-danger {
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        /* Tlačítko – menší velikost a zarovnání na střed */
+        .login-button {
+            background-color: #FFD5F2;
+            border: none;
+            color: #9D4C83;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 auto; /* zarovnání na střed */
+        }
+
+            .login-button:hover {
+                background-color: #ffc1ec;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER S LOGEM VLEVO -->
+    <header>
+        <div class="header-content">
+            <div class="logo">FlowerShop</div>
+        </div>
+    </header>
+
+    <!-- RŮŽOVÁ SEKCE S VLNOU DOLE -->
+    <section class="pink-section">
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- LOGIN KONTEJNER (NAPŮL RŮŽOVÁ, NAPŮL BÍLÁ) -->
+    <div class="login-container">
+        <div class="login-box">
+            <h1>Vítejte ve FlowerShopu</h1>
+            <p class="subtitle">Pro pokračování se prosím přihlašte</p>
+
+            @* Zobrazení TempData (pokud používáte) *@
+            @* 
+            @if (TempData["Message"] != null)
+            {
+                <div>@TempData["Message"]</div>
+            }
+            *@
+
+            <form asp-action="Login" method="post" class="login-form">
+                <div class="form-group">
+                    <label asp-for="Username">Přihlašovací jméno</label>
+                    <input asp-for="Username" placeholder="Example" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password">Vaše heslo</label>
+                    <input asp-for="Password" type="password" placeholder="Example123" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="login-button">Přihlásit se</button>
+            </form>
         </div>
     </div>
-    <div class="row justify-content-center mb-2">
-        <label asp-for="Password" class="col-sm-1 col-form-label">Password</label>
-        <div class="col-sm-4">
-            <input asp-for="Password" type="password" class="form-control">
-            <span asp-validation-for="Password" class="text-danger xinvalid-feedback"></span>
-        </div>
-    </div>
-    <div class="row justify-content-center mb-2">
-        <div class="col-5">
-            <button type="submit" class="btn btn-sm btn-primary w-100">
-                Login
-            </button>
-        </div>
-    </div>
-</form>
+
+</body>
+</html>

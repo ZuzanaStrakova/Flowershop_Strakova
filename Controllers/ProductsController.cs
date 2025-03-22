@@ -22,11 +22,19 @@ namespace Flowershop_Strakova.Controllers
                 Description = p.Description,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
-                Rating = p.Rating,
-                RatingCount = p.RatingCount,
+                Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
+                RatingCount = _context.Comments.Where(c => c.ProductId == p.Id).Count(),
                 IsTopProduct = p.IsTopProduct,
                 StorageAmount = p.StorageAmount
             }).ToList();
+
+            foreach(var product in products)
+            {
+                if (product.RatingCount != 0)
+                {
+                    product.Rating = product.Rating / product.RatingCount;
+                }
+            }
 
             return View(products);
         }
@@ -43,11 +51,18 @@ namespace Flowershop_Strakova.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
-                Rating = product.Rating,
-                RatingCount = product.RatingCount,
+                Rating = _context.Comments.Where(c => c.ProductId == product.Id).Sum(c => c.Rating),
+                RatingCount = _context.Comments.Where(c => c.ProductId == product.Id).Count(),
                 IsTopProduct = product.IsTopProduct,
                 StorageAmount = product.StorageAmount
             };
+
+            
+            if (product.RatingCount != 0)
+            {
+                product.Rating = product.Rating / product.RatingCount;
+            }
+            
 
             return View(model);
         }
@@ -71,12 +86,20 @@ namespace Flowershop_Strakova.Controllers
                                   Description = p.Description,
                                   Price = p.Price,
                                   ImageUrl = p.ImageUrl,
-                                  Rating = p.Rating,
-                                  RatingCount = p.RatingCount,
+                                  Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
+                                  RatingCount = _context.Comments.Where(c => c.ProductId == p.Id).Count(),
                                   IsTopProduct = p.IsTopProduct,
                                   StorageAmount = p.StorageAmount
                               })
                              .ToList();
+
+            foreach (var product in products)
+            {
+                if (product.RatingCount != 0)
+                {
+                    product.Rating = product.Rating / product.RatingCount;
+                }
+            }
 
             // Zobrazíme výsledek ve view "Index", které očekává kolekci produktů
             return View("Index", products);
@@ -95,12 +118,20 @@ namespace Flowershop_Strakova.Controllers
                                  Description = p.Description,
                                  Price = p.Price,
                                  ImageUrl = p.ImageUrl,
-                                 Rating = p.Rating,
-                                 RatingCount = p.RatingCount,
+                                 Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
+                                 RatingCount = _context.Comments.Where(c => c.ProductId == p.Id).Count(),
                                  IsTopProduct = p.IsTopProduct,
                                  StorageAmount = p.StorageAmount
                              })
                              .ToList();
+
+            foreach (var product in products)
+            {
+                if (product.RatingCount != 0)
+                {
+                    product.Rating = product.Rating / product.RatingCount;
+                }
+            }
 
             return View("Index", products);
         }

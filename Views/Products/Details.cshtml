@@ -1,331 +1,592 @@
-﻿@model Flowershop_Strakova.Models.ProductViewModel
+﻿@using Flowershop_Strakova.Entities;
+@using Flowershop_Strakova.Data;
+@model Flowershop_Strakova.Models.ProductViewModel
 @{
-    // Pokud máte layout, použijte: Layout = "~/Views/Shared/_Layout.cshtml";
     Layout = null;
+    ViewBag.Title = "FlowerShop";
+    DatabaseContext _context = new DatabaseContext();
 }
 
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="utf-8" />
-    <title>FlowerShop - @Model.Name</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <title>FlowerShop</title>
+    <!-- Google Font (pouze Neuton pro logo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap 4 CSS -->
+    <!-- Odkaz na Font Awesome pro ikony -->
     <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
-    <!-- FontAwesome (hvězdičky, ikony) -->
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha512-..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 
     <style>
-        /* Celkový vzhled */
+        /* RESET A ZÁKLADNÍ NASTAVENÍ */
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        html, body {
+        width: 100%;
+        height: 100%;
+        }
+
         body {
-            background: url("~/Content/images/pozadi.png") no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            font-family: Neonderthaw, sans-serif;
+        font-family: sans-serif;
+        color: #333;
+        background-color: #fff;
         }
 
-        /* Hlavička (logo, kategorie, vyhledávání, uživatel) */
-        .header {
-            background-color: #FFD6E3; /* Jemně růžový pruh */
-            padding: 1rem 2rem;
+        a {
+        text-decoration: none;
+        color: inherit;
         }
 
-            .header .top-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .header .logo {
-                font-size: 1.8rem;
-                font-weight: bold;
-                color: #4B4B4B;
-            }
-
-            .header .search-bar {
-                position: relative;
-                width: 300px;
-            }
-
-                .header .search-bar input {
-                    width: 100%;
-                    padding: 0.5rem 2.5rem 0.5rem 0.8rem;
-                    border-radius: 4px;
-                    border: 1px solid #ccc;
-                }
-
-                .header .search-bar button {
-                    position: absolute;
-                    top: 50%;
-                    right: 8px;
-                    transform: translateY(-50%);
-                    border: none;
-                    background: none;
-                    color: #888;
-                    cursor: pointer;
-                }
-
-            .header .user-info {
-                display: flex;
-                align-items: center;
-            }
-
-                .header .user-info img {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    margin-right: 0.5rem;
-                }
-
-                .header .user-info span {
-                    font-weight: 500;
-                    color: #4B4B4B;
-                }
-
-            /* Kategorie (pod logem a vyhledáváním) */
-            .header .categories {
-                margin-top: 1rem;
-            }
-
-                .header .categories a {
-                    margin-right: 2rem;
-                    text-decoration: none;
-                    font-weight: 500;
-                    color: #4B4B4B;
-                }
-
-                    .header .categories a:hover {
-                        text-decoration: underline;
-                    }
-
-        /* Produktová sekce */
-        .product-section {
-            padding: 2rem;
-            display: flex;
-            flex-wrap: wrap;
+        ul {
+        list-style: none;
         }
 
-            .product-section .product-image {
-                flex: 1 1 300px;
-                max-width: 450px;
-                margin-right: 2rem;
-                margin-bottom: 1rem;
-            }
-
-                .product-section .product-image img {
-                    width: 100%;
-                    border-radius: 8px;
-                }
-
-            .product-section .product-info {
-                flex: 1 1 300px;
-                max-width: 500px;
-            }
-
-            .product-section h1 {
-                font-size: 2rem;
-                font-weight: bold;
-                color: #4B4B4B;
-                margin-bottom: 1rem;
-            }
-
-            .product-section p {
-                color: #4B4B4B;
-                font-size: 1rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .product-section .product-price {
-                font-size: 1.4rem;
-                font-weight: bold;
-                color: #C90076; /* výraznější růžová */
-                margin-bottom: 1.5rem;
-            }
-
-            .product-section .btn-add-to-cart {
-                background-color: #C90076;
-                color: #fff;
-                border: none;
-                padding: 0.7rem 1.5rem;
-                border-radius: 4px;
-                font-weight: 500;
-                cursor: pointer;
-            }
-
-                .product-section .btn-add-to-cart:hover {
-                    background-color: #A80064;
-                }
-
-        /* Sekce recenzí */
-        .reviews-section {
-            padding: 2rem;
+        .hidden {
+            display: none;
         }
 
-            .reviews-section h2 {
-                font-size: 1.8rem;
-                font-weight: bold;
-                color: #4B4B4B;
-                margin-bottom: 2rem;
-            }
-        /* Formulář pro hvězdičkové hodnocení */
-        .review-input {
-            margin-bottom: 2rem;
+        /********************************************
+        * HLAVIČKA – BÍLÁ ČÁST
+        ********************************************/
+        header {
+        width: 100%;
+        background-color: #fff;
         }
 
-            .review-input p {
-                margin-bottom: 0.5rem;
-                font-weight: 500;
-                color: #4B4B4B;
-            }
-
-        .star-icon {
-            color: #C90076;
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-right: 0.3rem;
-        }
-        /* Jednotlivé recenze */
-        .review-box {
-            background-color: #FFFFFF;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+        .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 2rem;
         }
 
-            .review-box .review-header {
-                display: flex;
-                align-items: center;
-                margin-bottom: 0.5rem;
-            }
+        .logo {
+        font-family: 'Neuton', serif;
+        font-size: 3rem;
+        color: #9D4C83;
+        font-weight: bold;
+        margin-top: auto;
+        margin-bottom: auto;
+        }
 
-                .review-box .review-header .fa {
-                    color: #C90076;
-                    margin-right: 0.2rem;
-                }
+        .top-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        }
 
-                .review-box .review-header span {
-                    margin-left: 1rem;
-                    font-weight: 500;
-                    color: #4B4B4B;
-                }
+        .search-container {
+        position: relative;
+        }
 
-            .review-box p {
-                margin: 0;
-                color: #4B4B4B;
-            }
+        .search-container input[type="search"] {
+        font-size: 1.2rem;
+        padding: 0.6rem 2.2rem 0.6rem 1rem;
+        border: 1px solid #9D4C83;
+        border-radius: 4px;
+        background-color: #fff;
+        }
+
+        .search-container input::placeholder {
+        color: #9D4C83;
+        }
+
+        .search-container .fa-search {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9D4C83;
+        cursor: pointer;
+        font-size: 1.5rem;
+        }
+
+        .icon-btn {
+        color: #9D4C83;
+        font-size: 1.8rem;
+        cursor: pointer;
+        }
+
+        .user-name {
+        margin-left: 0.3rem;
+        color: #666;
+        font-size: 1.2rem;
+        }
+
+        /********************************************
+        * RŮŽOVÁ SEKCE – NAV BAR A PRODUKT
+        ********************************************/
+        .pink-section {
+        background-color: #FFF3FB;
+        position: relative;
+        padding: 1rem 2rem 7rem;
+        }
+
+        .menu-nav {
+        display: flex;
+        justify-content: center;
+        font-size: 1.4rem;
+        gap: 6rem;
+        padding: 0.8rem 0;
+        margin-bottom: 0;
+        }
+
+        .menu-nav a {
+        color: #9D4C83;
+        font-weight: 600;
+        position: relative;
+        padding: 0.5rem 0.3rem;
+        }
+
+        .menu-nav a i {
+        margin-left: 0.3rem;
+        font-size: 1.4rem;
+        }
+
+        .menu-nav a:hover {
+        background-color: #fcd5e5;
+        border-radius: 4px;
+        }
+
+        .nav-separator {
+        border: none;
+        height: 1px;
+        background-color: #9D4C83;
+        max-width: 80%;
+        margin: 0 auto 0.5rem;
+        }
+
+        .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+        }
+
+        .product-image img {
+        max-width: 350px;
+        border-radius: 8px;
+        width: 100%;
+        }
+
+        .product-details {
+        max-width: 400px;
+        text-align: left;
+        }
+
+        .product-details h2 {
+        color: #9D4C83;
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        }
+
+        .product-details p {
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        }
+
+        .product-count {
+        color: #333;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        }
+
+        .rating-section {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+        }
+
+        .rating-stars {
+        display: flex;
+        gap: 0.2rem;
+        }
+
+        .star-empty {
+        color: #ccc;
+        }
+
+        .star-filled {
+        color: #9D4C83;
+        }
+
+        .rating-text {
+        color: #9D4C83;
+        font-size: 1rem;
+        white-space: nowrap;
+        }
+
+        .product-footer {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-top: 1.5rem;
+        }
+
+        .product-price {
+        font-size: 1.2rem;
+        color: #333;
+        font-weight: bold;
+        }
+
+        .btn-add-to-cart {
+        display: inline-block;
+        background-color: #FFD5F2;
+        color: #333;
+        padding: 0.6rem 1.4rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        }
+
+        .btn-add-to-cart:hover {
+        background-color: #ffcaee;
+        }
+
+        .wave {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 120px;
+        overflow: hidden;
+        line-height: 0;
+        }
+
+        .wave svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        }
+
+        /********************************************
+        * SEKCE RECENZÍ – BÍLÉ POZADÍ
+        ********************************************/
+        .reviews {
+        background-color: #fff;
+        padding: 3rem 1rem;
+        text-align: center; /* zarovnání nadpisu */
+        }
+
+        .reviews h2 {
+        color: #9D4C83;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        }
+
+        /* Kontejner pro formulář i karty */
+        .reviews-container {
+        max-width: 900px;
+        margin: 0 auto; /* zarovnání do středu */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* vše na střed horizontálně */
+        }
+
+        /* Formulář pro novou recenzi */
+        .new-review-form {
+        background-color: #FFF3FB;
+        width: 100%;
+        max-width: 500px; /* aby nebyl přes celou šířku */
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem; /* mezera pod formulářem */
+        text-align: left; /* zarovnání textu uvnitř doleva */
+        }
+
+        .new-review-form label {
+        display: block;
+        font-weight: bold;
+        color: #9D4C83;
+        margin-bottom: 0.5rem;
+        }
+
+        .new-review-input {
+        width: 100%;
+        height: 70px;
+        resize: none;
+        background-color: #FFF3FB;
+        border: 1px solid #FFD5F2;
+        border-radius: 4px;
+        font-family: sans-serif;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        }
+
+        .stars-and-button {
+        display: flex;
+        align-items: center;
+        }
+
+        .stars-and-button .star-inputs {
+        display: flex;
+        gap: 0.4rem;
+        margin-right: 2rem;
+        }
+
+        .new-review-form button {
+        background-color: #FFD5F2;
+        color: #333;
+        padding: 0.4rem 1rem;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: auto;
+        }
+
+        .new-review-form button:hover {
+        background-color: #ffcaee;
+        }
+
+        /* Karty recenzí: 2 sloupce na větších obrazovkách */
+        .review-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        width: 100%;
+        max-width: 800px;
+        }
+
+        .review-card {
+        background-color: #FFF3FB;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: left;
+        border: none;
+        }
+
+        .review-card .review-author {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.3rem;
+        color: #333;
+        }
+
+        .review-card .review-author i {
+        margin-right: 0.5rem;
+        color: #9D4C83;
+        }
+
+        .review-card .stars {
+        color: #9D4C83;
+        margin-bottom: 0.5rem;
+        }
+
+        /********************************************
+        * FOOTER
+        ********************************************/
+        footer {
+        border-top: 1px solid #ccc;
+        color: #666;
+        text-align: center;
+        padding: 1rem;
+        }
     </style>
 </head>
 <body>
-    <!-- Horní část stránky -->
-    <header class="header">
-        <!-- 1) Řádek s logem, vyhledáváním a uživatelem -->
-        <div class="top-row">
-            <div class="logo">FlowerShop</div>
-            <div class="search-bar">
-                <input type="text" placeholder="Hledat" />
-                <button type="button">
+
+    <!-- HLAVIČKA -->
+    <header>
+        <div class="header-top">
+            <a href="@Url.Action("Index", "Products")" class="logo">FlowerShop</a>
+            <div class="top-nav-right">
+                <div class="search-container">
+                    <input type="search" placeholder="Hledat..." />
                     <i class="fa fa-search"></i>
-                </button>
+                </div>
+                <a href="@Url.Action("Index", "Cart")">
+                    <i class="fa fa-shopping-cart icon-btn"></i>
+                </a>
+                <i class="fa fa-user icon-btn"></i>
+                <span class="user-name">@Context.Session.GetString("User") [@Context.Session.GetString("Role")]</span>
             </div>
-            <div class="user-info">
-                <img src="https://via.placeholder.com/40" alt="Profil">
-                <span>Zuz Honková</span>
-            </div>
-        </div>
-        <!-- 2) Řádek s kategoriemi -->
-        <div class="categories">
-            <a href="#">Květinové kytice a aranže</a>
-            <a href="#">Řezané květiny</a>
         </div>
     </header>
 
-    <!-- Sekce detailu produktu -->
-    <section class="product-section">
-        <div class="product-image">
-            <!-- Pokud máte v modelu ImageUrl, použijte: src="@Model.ImageUrl" -->
-            <img src="https://via.placeholder.com/400x400/FF4B8B/ffffff?text=Kytice+rud%C3%BDch+r%C5%AF%C5%BE%C3%AD"
-                 alt="@Model.Name" />
+    <!-- RŮŽOVÁ SEKCE – NAV BAR A PRODUKT -->
+    <section class="pink-section">
+        <nav class="menu-nav">
+            <a href="#">
+                Řezané květiny
+                <i class="fa fa-caret-down"></i>
+            </a>
+            <a href="#">
+                Květinové kytice a aranže
+                <i class="fa fa-caret-down"></i>
+            </a>
+            <a href="#">
+                Pokojové a kancelářské rostliny
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </nav>
+        <hr class="nav-separator" />
+        <div class="product-container">
+            <div class="product-image">
+                <img src="@Model.ImageUrl"/>
+            </div>
+            <div class="product-details">
+                <h2>@Model.Name</h2>
+                <p>@Model.Description</p>
+                <p class="product-count">Počet kusů: @Model.StorageAmount kusů</p>
+                <div class="rating-section">
+                    <div class="rating-stars">
+                        @for(int i = 1; i <= 5; i++)
+                        {
+                            <i class="fa fa-star @(i <= Model.Rating ? "star-filled" : "star-empty")"></i>
+                        }
+                    </div>
+                    <span class="rating-text">@Model.Rating/5 &nbsp; @Model.RatingCount recenzí</span>
+                </div>
+                <div class="product-footer">
+                    <span class="product-price">Cena @(Model.Price.ToString("F2")) Kč</span>
+                    <button class="btn-add-to-cart">Přidat do košíku</button>
+                </div>
+            </div>
         </div>
-        <div class="product-info">
-            <!-- Název produktu -->
-            <h1>Kytice rudých růží</h1>
-            <!-- Popis produktu -->
-            <p>Výběrová 3kmená kytice s růžovými růžemi vhodná pro každodenní radost.</p>
-            <p>Počet růží: 100 kusů</p>
-            <!-- Cena -->
-            <div class="product-price">Cena 300 Kč</div>
-            <!-- Tlačítko přidat do košíku (případně formulář) -->
-            <form method="post" action="#">
-                <!-- Sem byste dala logiku pro AddToCart -->
-                <button type="submit" class="btn-add-to-cart">Přidat do košíku</button>
-            </form>
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+             C150.00,150.00 350.00,-50.00 500.00,49.98
+             L500.00,150.00 L0.00,150.00 Z"
+                style="stroke: none; fill: #ffffff;">
+                </path>
+            </svg>
         </div>
     </section>
 
-    <!-- Sekce recenzí -->
-    <section class="reviews-section">
+    <!-- SEKCE RECENZÍ -->
+    <section class="reviews">
         <h2>Recenze uživatelů</h2>
 
-        <!-- Vlastní hodnocení (pokud byste chtěla přidat recenzi) -->
-        <div class="review-input">
-            <p>Jak se produkt líbil Vám?</p>
-            <!-- Hvězdičky (zatím bez funkční logiky) -->
-            <i class="fa fa-star-o star-icon"></i>
-            <i class="fa fa-star-o star-icon"></i>
-            <i class="fa fa-star-o star-icon"></i>
-            <i class="fa fa-star-o star-icon"></i>
-            <i class="fa fa-star-o star-icon"></i>
-        </div>
+        <!-- Obalovací kontejner pro form i karty -->
+        <div class="reviews-container">
 
-        <!-- Ukázka recenzí -->
-        <div class="review-box">
-            <div class="review-header">
-                <!-- 5 hvězdiček -->
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <span>Anonym</span>
-            </div>
-            <p>Nejlepší kytice, kterou jsem kdy dostala!</p>
-        </div>
+            <!-- FORMULÁŘ PRO NOVOU RECENZI -->
+            <!-- Formulář (POST) - po odeslání půjde do akce CreateComment v ReviewsController -->
+            <form method="post" action="@Url.Action("CreateComment", "Comments")" class="new-review-form">
+                <label for="reviewText">A jak se produkt líbil Vám?</label>
 
-        <div class="review-box">
-            <div class="review-header">
-                <!-- 2 hvězdičky -->
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <span>Anonym</span>
-            </div>
-            <p>Hrozná... Už nikdy více.</p>
-        </div>
+                <!-- TEXTAREA pro text recenze -->
+                <textarea id="reviewText"
+                          name="reviewText"
+                          class="new-review-input"
+                          placeholder="Napište svůj názor..."></textarea>
 
-        <div class="review-box">
-            <div class="review-header">
-                <!-- 4,5 hvězdičky (zde ukázkově 4x plná a 1x poloprázdná) -->
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-half-o"></i>
-                <span>Anonym</span>
+                <div class="stars-and-button">
+                    <!-- HVĚZDIČKY -->
+                    <div class="star-inputs" id="starInputs">
+                        <!-- Star 1 -->
+                        <label for="star1">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="hidden" id="star1" type="radio" name="rating" value="1" />
+
+                        <!-- Star 2 -->
+                        <label for="star2">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="hidden" id="star2" type="radio" name="rating" value="2" />
+
+                        <!-- Star 3 -->
+                        <label for="star3">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="hidden" id="star3" type="radio" name="rating" value="3" />
+
+                        <!-- Star 4 -->
+                        <label for="star4">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="hidden" id="star4" type="radio" name="rating" value="4" />
+
+                        <!-- Star 5 -->
+                        <label for="star5">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="hidden" id="star5" type="radio" name="rating" value="5" />
+                    </div>
+                    
+                    @{
+                        TempData["CommentProductId"] = Model.Id;
+                    }
+
+                    <!-- TLAČÍTKO ODESLAT -->
+                    <button type="submit">Odeslat</button>
+                </div>
+            </form>
+
+            <!-- KARTY S RECENZEMI (2 sloupce) -->
+            <div class="review-cards">
+
+                @{
+                    List<Comment> comments = _context.Comments.Where(c => c.ProductId == Model.Id).ToList();
+                }
+                @foreach (var c in comments)
+                {
+                    <div class="review-card">
+                        <div class="review-author">
+                            <i class="fa fa-user-circle"></i>
+                            Anonym
+                        </div>
+                        <div class="stars">@c.Rating ★★★★☆</div>
+                        <p>@c.Text</p>
+                    </div>
+                }
             </div>
-            <p>Nejlepší přání k narozeninám, které jsem kdy dostal!</p>
+
         </div>
     </section>
 
-    <!-- Bootstrap a jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FOOTER DOLE -->
+    <footer class="border-top footer text-muted">
+        <div>
+            © 2025 - Flowershop_Strakova - <a href="/Home/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+        // Po načtení DOMu
+        document.addEventListener('DOMContentLoaded', function () {
+            // Najdeme všechny inputy pro hvězdičky
+            var starRadios = document.querySelectorAll('.star-inputs input[type="radio"]');
+            // Najdeme všechny ikony hvězdiček
+            var starIcons = document.querySelectorAll('.star-inputs label i');
+
+            // Přidáme event listener pro změnu
+            starRadios.forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    // Hodnota (1 - 5), kolik hvězdiček si uživatel zvolil
+                    var ratingValue = parseInt(this.value);
+
+                    // Projdeme hvězdičky a obarvíme je podle toho, kolik hvězd je vybráno
+                    starIcons.forEach((icon, idx) => {
+                        if (idx < ratingValue) {
+                            icon.style.color = '#9D4C83';
+                        } else {
+                            icon.style.color = '#ccc';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
