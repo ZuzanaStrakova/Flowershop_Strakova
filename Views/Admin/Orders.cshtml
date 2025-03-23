@@ -1,0 +1,324 @@
+﻿@model IEnumerable<Flowershop_Strakova.Entities.Order>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Správa objednávek";
+}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlowerShop – Správa objednávek</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 4 CSS (pro collapse a grid) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <style>
+        /**********************************************
+                                 * RESET A ZÁKLADY
+                 **********************************************/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: sans-serif;
+            color: #9D4C83;
+            background-color: #fff;
+        }
+        /**********************************************
+                                 * HEADER (BÍLÝ PRUH NAHOŘE)
+                 **********************************************/
+        header {
+            background-color: #fff;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Neuton', serif;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #9D4C83;
+        }
+        /**********************************************
+                                 * RŮŽOVÁ SEKCE S VLNOU
+                 **********************************************/
+        .pink-section {
+            position: relative;
+            height: 400px;
+            background-color: #FFE7F5;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+        /**********************************************
+                                 * ADMIN KONTEJNER
+                 **********************************************/
+        .admin-container {
+            position: relative;
+            max-width: 1000px;
+            margin: -150px auto 0; /* posun přes vlnu */
+            padding-bottom: 4rem;
+        }
+
+        .admin-box {
+            background-color: #fff;
+            border: 2px solid #9D4C83;
+            border-radius: 12px;
+            text-align: center;
+            padding: 2rem;
+            /* Větší min. výška, aby se pohodlně zobrazily filtry a tabulka */
+            min-height: 500px;
+        }
+
+            .admin-box h1 {
+                font-size: 2rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .admin-box p.subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+        /**********************************************
+                                 * FILTRY
+                 **********************************************/
+        .filter-form {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+            .filter-form input, .filter-form select {
+                margin-right: 1rem;
+                padding: 0.4rem;
+                border: 1px solid #9D4C83;
+                border-radius: 4px;
+            }
+
+            .filter-form button {
+                background-color: #FFD5F2;
+                border: none;
+                color: #9D4C83;
+                font-size: 1rem;
+                font-weight: bold;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .filter-form button:hover {
+                    background-color: #ffc1ec;
+                }
+        /**********************************************
+                                 * TABULKA OBJEDNÁVEK
+                 **********************************************/
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            border: 1px solid #9D4C83;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #FFD5F2;
+            color: #9D4C83;
+        }
+        /**********************************************
+                             * TLAČÍTKA A COLLAPSE DETALŮ
+                 **********************************************/
+        .admin-button {
+            background-color: #FFD5F2;
+            border: none;
+            color: #9D4C83;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 0.5rem;
+        }
+
+            .admin-button:hover {
+                background-color: #ffc1ec;
+            }
+
+        .collapse-content {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .nested-table th, .nested-table td {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+        }
+
+        .nested-table th {
+            background-color: #ffe0f8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="logo">FlowerShop</div>
+        </div>
+    </header>
+
+    <!-- RŮŽOVÁ SEKCE S VLNOU -->
+    <section class="pink-section">
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ADMIN KONTEJNER -->
+    <div class="admin-container">
+        <div class="admin-box">
+            <h1>Správa objednávek</h1>
+            <p class="subtitle">Filtrovat, upravovat a mazat objednávky</p>
+
+            <!-- FILTRY -->
+            <form method="get" action="@Url.Action("Orders", "Admin")" class="filter-form">
+                <input type="text" name="emailFilter" placeholder="Email" />
+                <select name="statusFilter">
+                    <option value="">-- Stav --</option>
+                    <option value="Nová">Nová</option>
+                    <option value="Zpracovává se">Zpracovává se</option>
+                    <option value="Odesláno">Odesláno</option>
+                    <option value="Dokončeno">Dokončeno</option>
+                </select>
+                <input type="date" name="dateFilter" placeholder="Datum" />
+                <button type="submit" class="admin-button">Filtrovat</button>
+            </form>
+
+            <!-- TABULKA OBJEDNÁVEK -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Account ID</th>
+                        <th>Adresa doručení</th>
+                        <th>Email</th>
+                        <th>Telefon</th>
+                        <th>Doručovací metoda</th>
+                        <th>Způsob platby</th>
+                        <th>Status</th>
+                        <th>Datum objednávky</th>
+                        <th>Detaily</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.Id</td>
+                            <td>@order.AccountId</td>
+                            <td>@order.DeliveryAdress</td>
+                            <td>@order.Email</td>
+                            <td>@order.Phone</td>
+                            <td>@order.DeliveryMethod</td>
+                            <td>@order.PaymentMethod</td>
+                            <td>@order.Status</td>
+                            <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <button class="admin-button" type="button" data-toggle="collapse" data-target="#orderDetails_@order.Id" aria-expanded="false" aria-controls="orderDetails_@order.Id">
+                                    Zobrazit detaily
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Dropdown (collapse) s detaily objednávky -->
+                        <tr>
+                            <td colspan="10" class="p-0">
+                                <div class="collapse" id="orderDetails_@order.Id">
+                                    <div class="collapse-content">
+                                        <h5>Detaily objednávky (Order Items)</h5>
+                                        <!-- Vnořená tabulka pro OrderItems -->
+                                        <table class="nested-table table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Product ID</th>
+                                                    <th>Cena produktu</th>
+                                                    <th>Množství</th>
+                                                    <th>Akce</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in order.OrderItems)
+                                                {
+                                                    <tr>
+                                                        <td>@item.Id</td>
+                                                        <td>@item.ProductId</td>
+                                                        <td>@item.ProductPrice.ToString("C")</td>
+                                                        <td>
+                                                            <!-- Editable pole pro množství -->
+                                                            <input type="number" name="quantity_@item.Id" value="@item.Quantity" style="width: 60px;" />
+                                                        </td>
+                                                        <td>
+                                                            <!-- Tlačítko pro uložení změn u položky (může volat JS funkci nebo přesměrovat na akci) -->
+                                                            <button type="button" class="admin-button">Upravit</button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                        <!-- Tlačítko pro uložení změn celého rozbaleného detailu objednávky (volitelně) -->
+                                        <button type="button" class="admin-button">Uložit změny</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap a jQuery skripty -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

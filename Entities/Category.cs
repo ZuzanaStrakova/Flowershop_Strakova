@@ -14,7 +14,13 @@ namespace Flowershop_Strakova.Entities
         [Column("ParentCategoryId")]
         public int? ParentCategoryId { get; set; }
 
-        public List<Category> Children { get; set; } = new List<Category>();      // nemá být virtual??
+
+        [ForeignKey("ParentCategoryId")]
+        public virtual Category Parent { get; set; }
+
+        [InverseProperty("Parent")]
+        public virtual List<Category> Children { get; set; } = new List<Category>();
+
 
 
         public Category()

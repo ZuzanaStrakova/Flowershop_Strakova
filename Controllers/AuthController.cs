@@ -18,6 +18,8 @@ namespace Flowershop_Strakova.Controllers
         [HttpPost]
         public IActionResult Login(LoginViewModel loginViewModel)
         {
+
+
             if (!ModelState.IsValid)
             {
                 return View(loginViewModel);
@@ -36,14 +38,64 @@ namespace Flowershop_Strakova.Controllers
             HttpContext.Session.SetString("Role", account.Role);
             HttpContext.Session.SetInt32("UserId", account.Id);
 
-            return RedirectToAction("Index", "Products");
+            if (account.Role == "Admin")
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Products");
+            }
         }
+
 
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("User");
 
             return RedirectToAction("Index", "Products");
+        }
+
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            AccountViewModel model = new AccountViewModel();
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public IActionResult Register(AccountViewModel model)
+        {
+            if (_context.Accounts.Where(a => a.Username == model.Username).Count() > 0)
+            {
+                TempData["Message"] = "User with this username already exists!";
+                TempData["MessageType"] = "danger";
+                ModelState.AddModelError("Username", "Uživatel s tímto jménem již existuje!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+
+            Account account = new Account
+            {
+                Username = model.Username,
+                Password = SHA256Helper.HashPassword(model.Password),
+                Role = "User",
+                Adress = model.Adress,
+                Email = model.Email,
+                Phone = model.Phone
+            };
+
+            _context.Accounts.Add(account);
+            _context.SaveChanges();
+
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

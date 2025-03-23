@@ -154,7 +154,7 @@
             margin: 0 auto 0.5rem;
         }
 
-        .wave {
+/*         .wave {
             position: absolute;
             left: 0;
             bottom: 0;
@@ -162,6 +162,15 @@
             height: 120px;
             overflow: hidden;
             line-height: 0;
+        } */
+
+        .wave-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1; /* Vlnovka bude pod obsahem */
+            pointer-events: none; /* Zajistí, že kliknutí "propadnou" obsahu, pokud by to bylo potřeba */
         }
 
             .wave svg {
@@ -169,6 +178,12 @@
                 width: 100%;
                 height: 100%;
             }
+
+
+        .content {
+            position: relative;
+            z-index: 2; /* Obsah bude nad vlnovkou */
+        }
 
         /********************************************
                              * FOOTER
@@ -186,15 +201,17 @@
     <!-- HLAVIČKA -->
     <header>
         <div class="header-top">
-            <div class="logo">FlowerShop</div>
+            <a href="@Url.Action("Index", "Products")" class="logo">FlowerShop</a>
             <div class="top-nav-right">
                 <div class="search-container">
                     <input type="search" placeholder="Hledat..." />
                     <i class="fa fa-search"></i>
                 </div>
-                <i class="fa fa-shopping-cart icon-btn"></i>
+                <a href="@Url.Action("Index", "Cart")">
+                    <i class="fa fa-shopping-cart icon-btn"></i>
+                </a>
                 <i class="fa fa-user icon-btn"></i>
-                <span class="user-name">Zuz Honková</span>
+                <span class="user-name">@Context.Session.GetString("User") [@Context.Session.GetString("Role")]</span>
             </div>
         </div>
     </header>
@@ -215,17 +232,23 @@
                 <i class="fa fa-caret-down"></i>
             </a>
         </nav>
-        <hr class="nav-separator"/>
-        <div class="wave">
+
+        <div class="content">
+            @RenderBody()
+        </div>
+
+        <div class="wave-bg">
             <svg viewBox="0 0 500 150" preserveAspectRatio="none">
                 <path d="M0.00,49.98
-             C150.00,150.00 350.00,-50.00 500.00,49.98
-             L500.00,150.00 L0.00,150.00 Z"
+                     C150.00,150.00 350.00,-50.00 500.00,49.98
+                     L500.00,150.00 L0.00,150.00 Z"
                       style="stroke: none; fill: #ffffff;">
                 </path>
             </svg>
         </div>
     </section>
+
+
 
     <!-- FOOTER -->
     <footer class="border-top footer text-muted">

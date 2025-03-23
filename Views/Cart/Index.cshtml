@@ -1,4 +1,4 @@
-﻿@model List<Flowershop_Strakova.Models.ProductViewModel>
+﻿@model List<Flowershop_Strakova.Models.ShoppingCartItemViewModel>
 
 @{
     Layout = null;
@@ -17,323 +17,330 @@
 
     <!-- Odkaz na Font Awesome pro ikony -->
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-          integrity="sha512-..."
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer" />
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha512-..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 
     <style>
         /* RESET A ZÁKLADNÍ NASTAVENÍ */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
         }
 
         html, body {
-            width: 100%;
-            height: 100%;
+        width: 100%;
+        height: 100%;
         }
         /* Globálně nastavujeme font a barvu */
         body {
-            font-family: sans-serif;
-            color: #9D4C83;
-            background-color: #fff;
+        font-family: sans-serif;
+        color: #9D4C83;
+        background-color: #fff;
         }
 
         a {
-            text-decoration: none;
-            color: inherit;
+        text-decoration: none;
+        color: inherit;
         }
 
         ul {
-            list-style: none;
+        list-style: none;
         }
 
         /********************************************
-                         * HLAVIČKA – BÍLÁ ČÁST
-                         ********************************************/
+        * HLAVIČKA – BÍLÁ ČÁST
+        ********************************************/
         header {
-            width: 100%;
-            background-color: #fff;
+        width: 100%;
+        background-color: #fff;
         }
 
         .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 2rem;
         }
 
         .logo {
-            font-family: 'Neuton', serif;
-            font-size: 3rem;
-            color: #9D4C83;
-            font-weight: bold;
+        font-family: 'Neuton', serif;
+        font-size: 3rem;
+        color: #9D4C83;
+        font-weight: bold;
         }
 
         .top-nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
         }
 
         .search-container {
-            position: relative;
+        position: relative;
         }
 
-            .search-container input[type="search"] {
-                font-size: 1.2rem;
-                padding: 0.6rem 2.2rem 0.6rem 1rem;
-                border: 1px solid #9D4C83;
-                border-radius: 4px;
-                background-color: #fff;
-            }
+        .search-container input[type="search"] {
+        font-size: 1.2rem;
+        padding: 0.6rem 2.2rem 0.6rem 1rem;
+        border: 1px solid #9D4C83;
+        border-radius: 4px;
+        background-color: #fff;
+        }
 
-            .search-container input::placeholder {
-                color: #9D4C83;
-            }
+        .search-container input::placeholder {
+        color: #9D4C83;
+        }
 
-            .search-container .fa-search {
-                position: absolute;
-                right: 1rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: #9D4C83;
-                cursor: pointer;
-                font-size: 1.5rem;
-            }
+        .search-container .fa-search {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9D4C83;
+        cursor: pointer;
+        font-size: 1.5rem;
+        }
 
         .icon-btn {
-            color: #9D4C83;
-            font-size: 1.8rem;
-            cursor: pointer;
+        color: #9D4C83;
+        font-size: 1.8rem;
+        cursor: pointer;
         }
 
         .user-name {
-            margin-left: 0.3rem;
-            font-size: 1.2rem;
+        margin-left: 0.3rem;
+        font-size: 1.2rem;
         }
 
         /********************************************
-                         * RŮŽOVÁ SEKCE – NAV BAR A KOŠÍK
-                         ********************************************/
+        * RŮŽOVÁ SEKCE – NAV BAR A KOŠÍK
+        ********************************************/
         .pink-section {
-            background-color: #FFF3FB;
-            position: relative;
-            padding: 1rem 2rem 7rem;
+        background-color: #FFF3FB;
+        position: relative;
+        padding: 1rem 2rem 7rem;
         }
 
         .menu-nav {
-            display: flex;
-            justify-content: center;
-            font-size: 1.4rem;
-            gap: 6rem;
-            padding: 0.8rem 0;
+        display: flex;
+        justify-content: center;
+        font-size: 1.4rem;
+        gap: 6rem;
+        padding: 0.8rem 0;
         }
 
-            .menu-nav a {
-                color: #9D4C83;
-                font-weight: 600;
-                padding: 0.5rem 0.3rem;
-            }
+        .menu-nav a {
+        color: #9D4C83;
+        font-weight: 600;
+        padding: 0.5rem 0.3rem;
+        }
 
-                .menu-nav a i {
-                    margin-left: 0.3rem;
-                    font-size: 1.4rem;
-                }
+        .menu-nav a i {
+        margin-left: 0.3rem;
+        font-size: 1.4rem;
+        }
 
-                .menu-nav a:hover {
-                    background-color: #fcd5e5;
-                    border-radius: 4px;
-                }
+        .menu-nav a:hover {
+        background-color: #fcd5e5;
+        border-radius: 4px;
+        }
 
         .nav-separator {
-            border: none;
-            height: 1px;
-            background-color: #9D4C83;
-            max-width: 80%;
-            margin: 0 auto 0.5rem;
+        border: none;
+        height: 1px;
+        background-color: #9D4C83;
+        max-width: 80%;
+        margin: 0 auto 0.5rem;
         }
 
         .wave {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 120px;
-            overflow: hidden;
-            line-height: 0;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 120px;
+        overflow: hidden;
+        line-height: 0;
         }
 
-            .wave svg {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
+        .wave svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        }
 
         /********************************************
-                         * KOŠÍK
-                         ********************************************/
+        * KOŠÍK
+        ********************************************/
         .cart-content {
-            width: 90%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            text-align: left;
+        width: 90%;
+        max-width: 1200px;
+        margin: 2rem auto;
+        text-align: left;
         }
-            /* Zvýšený margin-top u nadpisu */
-            .cart-content h1 {
-                font-size: 2rem;
-                margin-top: 3rem;
-                margin-bottom: 1rem;
-            }
+        /* Zvýšený margin-top u nadpisu */
+        .cart-content h1 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        }
 
         .cart-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 0.5rem;
-            margin-bottom: 2rem;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+        margin-bottom: 2rem;
         }
 
-            .cart-table thead {
-                background-color: #FFF3FB;
-            }
+        .cart-table thead {
+        background-color: #FFF3FB;
+        }
 
-            .cart-table th,
-            .cart-table td {
-                padding: 1rem;
-                text-align: left;
-            }
+        .cart-table th,
+        .cart-table td {
+        padding: 1rem;
+        text-align: left;
+        }
 
-            .cart-table th {
-                color: #9D4C83;
-                font-weight: 600;
-                border-bottom: 1px solid #9D4C83;
-            }
+        .cart-table th {
+        color: #9D4C83;
+        font-weight: 600;
+        border-bottom: 1px solid #9D4C83;
+        }
 
-            .cart-table tbody tr {
-                background-color: #fff;
-                border: 1px solid #9D4C83;
-                border-radius: 8px;
-            }
+        .cart-table tbody tr {
+        background-color: #fff;
+        border: 1px solid #9D4C83;
+        border-radius: 8px;
+        }
 
-                .cart-table tbody tr:hover {
-                    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-                }
+        .cart-table tbody tr:hover {
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
 
-            .cart-table td {
-                color: #9D4C83;
-            }
+        .cart-table td {
+        color: #9D4C83;
+        }
 
         .remove-button {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: #9D4C83;
-            cursor: pointer;
-            font-weight: bold;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #9D4C83;
+        cursor: pointer;
+        font-weight: bold;
         }
 
         .cart-summary {
-            text-align: right;
-            margin-top: 1rem;
+        text-align: right;
+        margin-top: 1rem;
         }
 
-            .cart-summary p {
-                margin: 0.4rem 0;
-                font-size: 1rem;
-                color: #9D4C83;
-            }
+        .cart-summary p {
+        margin: 0.4rem 0;
+        font-size: 1rem;
+        color: #9D4C83;
+        }
         /* Tlačítko s textem "Pokračovat" */
         .pay-button {
-            background-color: #FFD5F2;
-            color: #9D4C83;
-            padding: 0.8rem 1.8rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 1rem;
-            font-size: 1.1rem;
+        background-color: #FFD5F2;
+        color: #9D4C83;
+        padding: 0.4rem 1.8rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 1rem;
+        font-size: 1.1rem;
         }
 
-            .pay-button:hover {
-                background-color: #ffcaee;
-            }
+        .pay-button:hover {
+        background-color: #ffcaee;
+        }
+
+        .space {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
         /********************************************
-                         * VLASTNÍ NUMERIC UP/DOWN
-                         ********************************************/
+        * VLASTNÍ NUMERIC UP/DOWN
+        ********************************************/
         .quantity-wrapper {
-            display: inline-flex;
-            align-items: center;
-            border: 1px solid #9D4C83;
-            border-radius: 4px;
-            overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #9D4C83;
+        border-radius: 4px;
+        overflow: hidden;
         }
 
         .arrow-btn {
-            background-color: transparent;
-            border: none;
-            width: 2rem;
-            color: #9D4C83;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1.2rem;
+        background-color: transparent;
+        border: none;
+        width: 2rem;
+        color: #9D4C83;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.2rem;
         }
 
-            .arrow-btn:hover {
-                background-color: #FFD5F2;
-            }
+        .arrow-btn:hover {
+        background-color: #FFD5F2;
+        }
 
         .quantity-input {
-            width: 3rem;
-            border: none;
-            text-align: center;
-            outline: none;
-            font-size: 1rem;
-            color: #9D4C83;
+        width: 3rem;
+        border: none;
+        text-align: center;
+        outline: none;
+        font-size: 1rem;
+        color: #9D4C83;
         }
 
-            .quantity-input::-webkit-inner-spin-button,
-            .quantity-input::-webkit-outer-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
+        .quantity-input::-webkit-inner-spin-button,
+        .quantity-input::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
 
-            .quantity-input[type=number] {
-                -moz-appearance: textfield;
-            }
+        .quantity-input[type=number] {
+        -moz-appearance: textfield;
+        }
 
         /********************************************
-                         * MINIATURA OBRÁZKU
-                         ********************************************/
+        * MINIATURA OBRÁZKU
+        ********************************************/
         .thumbnail-wrapper {
-            width: 50px;
-            height: 50px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            overflow: hidden;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 0.6rem;
+        width: 50px;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 0.6rem;
         }
 
-            .thumbnail-wrapper img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-            }
+        .thumbnail-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        }
 
         /********************************************
-                         * FOOTER – původní styl
-                         ********************************************/
+        * FOOTER – původní styl
+        ********************************************/
         footer {
-            border-top: 1px solid #ccc;
-            text-align: center;
-            padding: 1rem;
-            color: #666;
+        border-top: 1px solid #ccc;
+        text-align: center;
+        padding: 1rem;
+        color: #666;
         }
     </style>
 </head>
@@ -341,13 +348,15 @@
     <!-- HLAVIČKA -->
     <header>
         <div class="header-top">
-            <div class="logo">FlowerShop</div>
+            <a href="@Url.Action("Index", "Products")" class="logo">FlowerShop</a>
             <div class="top-nav-right">
                 <div class="search-container">
                     <input type="search" placeholder="Hledat..." />
                     <i class="fa fa-search"></i>
                 </div>
-                <i class="fa fa-shopping-cart icon-btn"></i>
+                <a href="@Url.Action("Index", "Cart")">
+                    <i class="fa fa-shopping-cart icon-btn"></i>
+                </a>
                 <i class="fa fa-user icon-btn"></i>
                 <span class="user-name">@Context.Session.GetString("User") [@Context.Session.GetString("Role")]</span>
             </div>
@@ -385,53 +394,40 @@
                     </tr>
                 </thead>
                 <tbody>
-@*                     @foreach() *@
-
-                    <tr>
-                        <td>
-                            <div class="thumbnail-wrapper">
-                                <img src="https://storage.googleapis.com/regalflowers-cdn/img-2022-07-Regal-Red-Roses-Bouquet-1_11zon-1-scaled.jpg" alt="Růže" />
-                            </div>
-                            Kytice rudých růží
-                        </td>
-                        <td>
-                            <div class="quantity-wrapper">
-                                <button class="arrow-btn" data-action="decrement">-</button>
-                                <input type="number" class="quantity-input" value="1" min="1" />
-                                <button class="arrow-btn" data-action="increment">+</button>
-                            </div>
-                        </td>
-                        <td>300 Kč</td>
-                        <td>
-                            <button class="remove-button">X</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="thumbnail-wrapper">
-                                <img src="https://images.pexels.com/photos/11232647/pexels-photo-11232647.jpeg?auto=compress&cs=tinysrgb&h=350" alt="Tulipány" />
-                            </div>
-                            Kytice Tulipánů
-                        </td>
-                        <td>
-                            <div class="quantity-wrapper">
-                                <button class="arrow-btn" data-action="decrement">-</button>
-                                <input type="number" class="quantity-input" value="4" min="1" />
-                                <button class="arrow-btn" data-action="increment">+</button>
-                            </div>
-                        </td>
-                        <td>1 500 Kč</td>
-                        <td>
-                            <button class="remove-button">X</button>
-                        </td>
-                    </tr>
+                    @{
+                        foreach(var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="thumbnail-wrapper">
+                                        <img src="https://storage.googleapis.com/regalflowers-cdn/img-2022-07-Regal-Red-Roses-Bouquet-1_11zon-1-scaled.jpg" alt="Růže" />
+                                    </div>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    <div class="quantity-wrapper">
+                                        <button class="arrow-btn" data-action="decrement">-</button>
+                                        <input type="number" class="quantity-input" value="@item.Quantity" min="1" />
+                                        <button class="arrow-btn" data-action="increment">+</button>
+                                    </div>
+                                </td>
+                                <td>@item.Price.ToString("F2") Kč</td>
+                                <td>
+                                    <a href="@Url.Action("RemoveFromCart", "Cart", new { shoppingCartItemId = item.Id })" class="remove-button">X</a>
+                                </td>
+                            </tr>
+                        }
+                    }
                 </tbody>
             </table>
 
             <div class="cart-summary">
-                <p>Celkem bez DPH: 1 422 Kč</p>
+                <p>Celkem bez DPH: 1 422 Kč</p>                     @*      -------------------------------------------------------------------- *@
                 <p><strong>Celkem: 1 800 Kč</strong></p>
-                <a class="pay-button" href="@Url.Action("Order", "Cart")">Pokračovat</a>
+                <div class="space">
+                    <a class="pay-button" href="@Url.Action("Index", "Products")">Zpět k nákupu</a>
+                    <a class="pay-button" href="@Url.Action("Order", "Cart")">Pokračovat</a>
+                </div>
             </div>
         </div>
 

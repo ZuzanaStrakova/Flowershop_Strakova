@@ -3,6 +3,7 @@ using Flowershop_Strakova.Controllers;
 using Microsoft.EntityFrameworkCore.Storage;
 using Flowershop_Strakova.Data;
 using Flowershop_Strakova.Entities;
+using Flowershop_Strakova.Models;
 
 namespace Flowershop_Strakova.Controllers
 {
@@ -19,9 +20,16 @@ namespace Flowershop_Strakova.Controllers
                 return RedirectToAction("Login", "Auth");
             }
 
-            var cart = _context.ShoppingCarts.Where(sc => sc.AccountId == userId).ToList();
+            var cart = _context.ShoppingCarts.Where(sc => sc.AccountId == userId).Select(c => new ShoppingCartItemViewModel
+            {
+                Id = c.Id,
+                Name = c.Product.Name,
+                Price = c.ProductId,
+                Quantity = c.Quantity,
+                ImageUrl = c.Product.ImageUrl
+            }).ToList();
 
-            return View();
+            return View(cart);
         }
 
         [HttpPost]
@@ -65,29 +73,16 @@ namespace Flowershop_Strakova.Controllers
 
 
 
-        public IActionResult RemoveFromCart(int productId)
+        public IActionResult RemoveFromCart(int shoppingCartItemId)
         {
-            int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
+            ShoppingCart? row = _context.ShoppingCarts.Find(shoppingCartItemId);
 
-            if (userId == 0)
-            {
-                return RedirectToAction("Login", "Auth");
-            }
-
-            ShoppingCart? row = _context.ShoppingCarts.Where(sc => sc.AccountId == userId && sc.ProductId == productId).FirstOrDefault();
-
-            if (row.Quantity > 1)
-            {
-                row.Quantity--;
-                _context.ShoppingCarts.Update(row);
-            }
-            else
+            if(row != null)
             {
                 _context.ShoppingCarts.Remove(row);
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
-
-
+            
 
             var referer = Request.Headers["Referer"].ToString();
 

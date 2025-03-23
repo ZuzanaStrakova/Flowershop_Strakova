@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "FlowerShop - Domů";
     Layout = null; // Případně využijte vlastní layout
+    var categories = ViewBag.Categories as IEnumerable<Flowershop_Strakova.Entities.Category>;
 }
 
 <!DOCTYPE html>
@@ -15,42 +16,432 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
+        /* RESET A ZÁKLADNÍ NASTAVENÍ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
         body {
-            padding-top: 70px;
+            font-family: sans-serif;
+            color: #333;
+            background-color: #fff;
         }
-        /* Levý postranní panel */
-        .sidebar {
-            background-color: #f8f9fa;
-            padding: 15px;
-            min-height: 100vh;
-        }
-        /* Produktové karty */
-        .product-card {
-            margin-bottom: 20px;
-        }
-        /* Profilový obrázek v navigaci */
-        .profile-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        /* Úprava kategorie v sidebaru */
-        .sidebar h5 {
-            margin-bottom: 15px;
-        }
-        .sidebar a {
-            color: #343a40;
+
+        a {
             text-decoration: none;
+            color: inherit;
         }
-        .sidebar a:hover {
-            text-decoration: underline;
+
+        ul {
+            list-style: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /********************************************
+                                 * HLAVIČKA – BÍLÁ ČÁST
+                                 ********************************************/
+        header {
+            width: 100%;
+            background-color: #fff;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Neuton', serif;
+            font-size: 3rem;
+            color: #9D4C83;
+            font-weight: bold;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+            .search-container input[type="search"] {
+                font-size: 1.2rem;
+                padding: 0.6rem 2.2rem 0.6rem 1rem;
+                border: 1px solid #9D4C83;
+                border-radius: 4px;
+                background-color: #fff;
+            }
+
+            .search-container input::placeholder {
+                color: #9D4C83;
+            }
+
+            .search-container .fa-search {
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #9D4C83;
+                cursor: pointer;
+                font-size: 1.5rem;
+            }
+
+        .icon-btn {
+            color: #9D4C83;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .user-name {
+            margin-left: 0.3rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /********************************************
+                                 * RŮŽOVÁ SEKCE – NAV BAR A PRODUKT
+                                 ********************************************/
+        .pink-section {
+            background-color: #FFF3FB;
+            position: relative;
+            padding: 1rem 2rem 7rem;
+        }
+
+        .menu-nav {
+            display: flex;
+            justify-content: center;
+            font-size: 1.4rem;
+            gap: 6rem;
+            padding: 0.8rem 0;
+            margin-bottom: 0;
+            position: relative;
+        }
+
+            .menu-nav a {
+                color: #9D4C83;
+                font-weight: 600;
+                position: relative;
+                padding: 0.5rem 0.3rem;
+            }
+
+                .menu-nav a i {
+                    margin-left: 0.3rem;
+                    font-size: 1.4rem;
+                    transition: transform 0.3s ease;
+                }
+
+                .menu-nav a:hover {
+                    background-color: #fcd5e5;
+                    border-radius: 4px;
+                }
+
+        .nav-separator {
+            border: none;
+            height: 1px;
+            background-color: #9D4C83;
+            max-width: 80%;
+            margin: 0 auto 0.5rem;
+        }
+
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .product-image img {
+            max-width: 350px;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .product-details {
+            max-width: 400px;
+            text-align: left;
+        }
+
+            .product-details h2 {
+                color: #9D4C83;
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .product-details p {
+                margin-bottom: 0.5rem;
+                line-height: 1.4;
+            }
+
+        .product-count {
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .star-empty {
+            color: #ccc;
+        }
+
+        .star-filled {
+            color: #9D4C83;
+        }
+
+        .rating-text {
+            color: #9D4C83;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .product-footer {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .btn-add-to-cart {
+            display: inline-block;
+            background-color: #FFD5F2;
+            color: #333;
+            padding: 0.6rem 1.4rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            .btn-add-to-cart:hover {
+                background-color: #ffcaee;
+            }
+
+        .wave {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+        /********************************************
+                                 * DROPDOWNS – NOVÉ STYLY PRO NAV
+                                 ********************************************/
+        .menu-dropdown {
+            position: relative;
+        }
+
+            .menu-dropdown > a {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+                cursor: pointer;
+            }
+        /* Místo display: none používáme opacity a transform pro animaci */
+        .dropdown-content {
+            position: absolute;
+            top: calc(100% + 0.3rem);
+            left: 0;
+            background-color: #ffffff;
+            border: 2px solid #9D4C83;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            min-width: 180px;
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+            .dropdown-content a {
+                display: block;
+                color: #9D4C83;
+                margin: 0.5rem 0;
+            }
+
+                .dropdown-content a:hover {
+                    background-color: #fcd5e5;
+                    border-radius: 4px;
+                }
+        /* Po otevření menu nastavíme opacity, transformaci a povolíme interakci */
+        .menu-dropdown.show .dropdown-content {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        /* Otočení šipky při otevřeném dropdownu */
+        .menu-dropdown.show > a i {
+            transform: rotate(180deg);
+        }
+
+        /********************************************
+                                 * SEKCE RECENZÍ – BÍLÉ POZADÍ
+                                 ********************************************/
+        .reviews {
+            background-color: #fff;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+            .reviews h2 {
+                color: #9D4C83;
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+        .reviews-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .new-review-form {
+            background-color: #FFF3FB;
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+            .new-review-form label {
+                display: block;
+                font-weight: bold;
+                color: #9D4C83;
+                margin-bottom: 0.5rem;
+            }
+
+        .new-review-input {
+            width: 100%;
+            height: 70px;
+            resize: none;
+            background-color: #FFF3FB;
+            border: 1px solid #FFD5F2;
+            border-radius: 4px;
+            font-family: sans-serif;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+        }
+
+        .stars-and-button {
+            display: flex;
+            align-items: center;
+        }
+
+            .stars-and-button .star-inputs {
+                display: flex;
+                gap: 0.4rem;
+                margin-right: 2rem;
+            }
+
+        .new-review-form button {
+            background-color: #FFD5F2;
+            color: #333;
+            padding: 0.4rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+            .new-review-form button:hover {
+                background-color: #ffcaee;
+            }
+
+        .review-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .review-card {
+            background-color: #FFF3FB;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: left;
+            border: none;
+        }
+
+            .review-card .review-author {
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.3rem;
+                color: #333;
+            }
+
+                .review-card .review-author i {
+                    margin-right: 0.5rem;
+                    color: #9D4C83;
+                }
+
+            .review-card .stars {
+                color: #9D4C83;
+                margin-bottom: 0.5rem;
+            }
+
+        /********************************************
+                                 * FOOTER
+                                 ********************************************/
+        footer {
+            border-top: 1px solid #ccc;
+            color: #666;
+            text-align: center;
+            padding: 1rem;
         }
     </style>
 </head>
 <body>
     <!-- Horní navigační lišta -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+@*     <header class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a class="navbar-brand" href="#">FlowerShop</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
@@ -67,8 +458,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown">
                         @Context.Session.GetString("User") [@Context.Session.GetString("Role")]
-@*                         <img src="~/images/profile-placeholder.png" alt="Profil" class="profile-img"> *@
-                    </a>
+                          <img src="~/images/profile-placeholder.png" alt="Profil" class="profile-img"> 
+                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
                         <a class="dropdown-item" href="#">Profil</a>
                         <a class="dropdown-item" href="#">Nastavení</a>
@@ -78,7 +469,91 @@
                 </li>
             </ul>
         </div>
-    </nav>
+    </header>  *@
+
+    <header>
+        <div class="header-top">
+            <a href="@Url.Action("Index", "Products")" class="logo">FlowerShop</a>
+            <div class="top-nav-right">
+                <form class="search-container" method="get" action="@Url.Action("Search", "Products")">
+                    <input name="query" type="search" placeholder="Hledat..." aria-label="Hledat" />
+                    <i class="fa fa-search" onclick="this.closest('form').submit();"></i>
+                </form>
+
+                <a href="@Url.Action("Index", "Cart")">
+                    <i class="fa fa-shopping-cart icon-btn"></i>
+                </a>
+                <i class="fa fa-user icon-btn"></i>
+                <span class="user-name">@Context.Session.GetString("User") [@Context.Session.GetString("Role")]</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- RŮŽOVÁ SEKCE – NAV BAR A PRODUKT -->
+    <section class="pink-section">
+                <nav class="menu-nav">
+            @if (categories != null)
+            {
+                foreach (var mainCategory in categories.Where(c => c.ParentCategoryId == null))
+                {
+                    <div class="menu-dropdown" id="menuDropdown_@mainCategory.Id">
+                        <a href="#">
+                            @mainCategory.Name
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        @if (mainCategory.Children != null && mainCategory.Children.Any())
+                        {
+                            <div class="dropdown-content">
+                                @foreach (var subCategory in mainCategory.Children)
+                                {
+                                    <a href="@Url.Action("Search", "Products", new { selectedCategory = subCategory.Id })">
+                                        @subCategory.Name
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </nav>
+
+        <hr class="nav-separator" />
+
+        <!-- Detail vybraného produktu -->
+@*         <div class="product-container">
+            <div class="product-image">
+                <img src="@Model.ImageUrl" />
+            </div>
+            <div class="product-details">
+                <h2>@Model.Name</h2>
+                <p>@Model.Description</p>
+                <p class="product-count">Počet kusů: @Model.StorageAmount kusů</p>
+                <div class="rating-section">
+                    <div class="rating-stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="fa fa-star @(i <= Model.Rating ? "star-filled" : "star-empty")"></i>
+                        }
+                    </div>
+                    <span class="rating-text">@Model.Rating/5 &nbsp; @Model.RatingCount recenzí</span>
+                </div>
+                <div class="product-footer">
+                    <span class="product-price">Cena @(Model.Price.ToString("F2")) Kč</span>
+                    <button class="btn-add-to-cart">Přidat do košíku</button>
+                </div>
+            </div>
+        </div> *@
+
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;">
+                </path>
+            </svg>
+        </div>
+    </section>
 
     <!-- Hlavní obsah stránky -->
     <div class="container-fluid">

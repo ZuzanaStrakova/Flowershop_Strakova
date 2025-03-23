@@ -15,5 +15,24 @@ namespace Flowershop_Strakova.Entities
         public decimal ProductPrice { get; set; }
         [Column("Quantity")]
         public int Quantity { get; set; }
+
+
+        public OrderItem()
+        {
+            Id = 0;
+            OrderId = 0;
+            ProductId = 0;
+            ProductPrice = 0;
+            Quantity = 0;
+        }
+
+        public OrderItem(int id, int orderId, int productId, decimal productPrice, int quantity)
+        {
+            Id = id;
+            OrderId = orderId;
+            ProductId = productId;
+            ProductPrice = productPrice;
+            Quantity = quantity;
+        }
     }
 }

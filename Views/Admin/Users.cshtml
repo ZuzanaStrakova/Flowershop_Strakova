@@ -1,0 +1,157 @@
+﻿@model List<Flowershop_Strakova.Models.AccountViewModel>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Správa uživatelů";
+}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlowerShop – Správa uživatelů</title>
+    <!-- Google Font pro logo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <style>
+        /* RESET A ZÁKLADY */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; font-family: sans-serif; color: #9D4C83; background-color: #fff; }
+        
+        /* HEADER */
+        header { background-color: #fff; padding: 1rem 2rem; }
+        .header-content { display: flex; align-items: center; }
+        .logo { font-family: 'Neuton', serif; font-size: 3rem; font-weight: bold; color: #9D4C83; }
+        
+        /* RŮŽOVÁ SEKCE S VLNOU */
+        .pink-section { position: relative; height: 400px; background-color: #FFE7F5; }
+        .wave { position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; overflow: hidden; line-height: 0; }
+            .wave svg { display: block; width: 100%; height: 100%; }
+        
+        /* ADMIN KONTEJNER */
+        .admin-container { position: relative; max-width: 1000px; margin: -150px auto 0; padding-bottom: 4rem; }
+        .admin-box { background-color: #fff; border: 2px solid #9D4C83; border-radius: 12px; text-align: center; padding: 2rem; min-height: 500px; }
+        .admin-box h1 { font-size: 2rem; margin-bottom: 0.3rem; }
+        .admin-box p.subtitle { font-size: 1rem; margin-bottom: 1.5rem; }
+        
+        /* FILTRY */
+        .filter-form { margin-bottom: 1.5rem; text-align: left; }
+        .filter-form input, .filter-form select {
+            margin-right: 1rem; padding: 0.4rem; border: 1px solid #9D4C83; border-radius: 4px;
+        }
+        .filter-form button {
+            background-color: #FFD5F2; border: none; color: #9D4C83; font-size: 1rem;
+            font-weight: bold; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
+        }
+        .filter-form button:hover { background-color: #ffc1ec; }
+        
+        /* TABULKA UŽIVATELŮ */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        th, td { padding: 0.8rem; border: 1px solid #9D4C83; text-align: left; vertical-align: middle; }
+        th { background-color: #FFD5F2; color: #9D4C83; }
+        
+        /* TLAČÍTKA */
+        .admin-button {
+            background-color: #FFD5F2; border: none; color: #9D4C83; font-size: 1rem; font-weight: bold;
+            padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; text-decoration: none; margin: 0.5rem;
+            display: inline-block;
+        }
+        .admin-button:hover { background-color: #ffc1ec; }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="logo">FlowerShop</div>
+        </div>
+    </header>
+    
+    <!-- RŮŽOVÁ SEKCE S VLNOU -->
+    <section class="pink-section">
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;"></path>
+            </svg>
+        </div>
+    </section>
+    
+    <!-- ADMIN KONTEJNER -->
+    <div class="admin-container">
+        <div class="admin-box">
+            <h1>Správa uživatelů</h1>
+            <p class="subtitle">Filtrovat, upravovat a mazat uživatele</p>
+            
+            <!-- Filtry -->
+            <form method="get" action="@Url.Action("ManageUsers", "Admin")" class="filter-form">
+                <input type="text" name="usernameFilter" placeholder="Username" />
+                <input type="text" name="emailFilter" placeholder="Email" />
+                <select name="roleFilter">
+                    <option value="">-- Role --</option>
+                    <option value="User">User</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <button type="submit" class="admin-button">Filtrovat</button>
+            </form>
+            
+            <!-- Tabulka uživatelů -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Telefon</th>
+                        <th>Adresa</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        SelectListItem[] roles = new SelectListItem[]
+                        {
+                            new SelectListItem { Value = "User", Text = "User" },
+                            new SelectListItem { Value = "Admin", Text = "Admin" }
+                        };
+                    }
+
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>@Model[i].Id</td>
+                            <td>@Model[i].Username</td>
+                            <td>
+                                @using (Html.BeginForm("UpdateRole", "Admin", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="userId" value="@Model[i].Id" />
+                                    @Html.DropDownList("role", roles, Model[i].Role, new { onchange = "this.form.submit();" })
+                                }
+                            </td>
+                            <td>@Model[i].Email</td>
+                            <td>@Model[i].Phone</td>
+                            <td>@Model[i].Adress</td>
+                            <td>
+                                <a href="@Url.Action("EditAccount", "Admin", new { id = Model[i].Id })" class="admin-button">Upravit</a>
+                                <a href="@Url.Action("DeleteAccount", "Admin", new { id = Model[i].Id })" class="admin-button">Smazat</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Bootstrap a jQuery skripty -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

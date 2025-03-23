@@ -216,6 +216,7 @@
                     <label asp-for="Password">Vaše heslo</label>
                     <input asp-for="Password" type="password" placeholder="Example123" />
                     <span asp-validation-for="Password" class="text-danger"></span>
+                    <a @* class="pay-button" *@ href="@Url.Action("Register", "Auth")">Registrace</a>
                 </div>
 
                 <button type="submit" class="login-button">Přihlásit se</button>

@@ -11,6 +11,7 @@ namespace Flowershop_Strakova.Data
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
 
         override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

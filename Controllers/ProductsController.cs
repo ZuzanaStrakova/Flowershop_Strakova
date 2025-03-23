@@ -36,6 +36,9 @@ namespace Flowershop_Strakova.Controllers
                 }
             }
 
+            var categories = _context.Categories.Include("Children").ToList();
+            ViewBag.Categories = categories;
+
             return View(products);
         }
 
@@ -62,7 +65,7 @@ namespace Flowershop_Strakova.Controllers
             {
                 product.Rating = product.Rating / product.RatingCount;
             }
-            
+
 
             return View(model);
         }
@@ -101,7 +104,6 @@ namespace Flowershop_Strakova.Controllers
                 }
             }
 
-            // Zobrazíme výsledek ve view "Index", které očekává kolekci produktů
             return View("Index", products);
         }
 

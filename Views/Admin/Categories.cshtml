@@ -1,0 +1,310 @@
+﻿@model IEnumerable<Flowershop_Strakova.Entities.Category>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Správa kategorií";
+}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlowerShop – Správa kategorií</title>
+    <!-- Google Font pro nápis FlowerShop -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <style>
+        /**********************************************
+                                 * RESET A ZÁKLADY
+                 **********************************************/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: sans-serif;
+            color: #9D4C83;
+            background-color: #fff;
+        }
+        /**********************************************
+                                 * HEADER (BÍLÝ PRUH NAHOŘE)
+                 **********************************************/
+        header {
+            background-color: #fff;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Neuton', serif;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #9D4C83;
+        }
+        /**********************************************
+                                 * RŮŽOVÁ SEKCE S VLNOU
+                 **********************************************/
+        .pink-section {
+            position: relative;
+            height: 400px;
+            background-color: #FFE7F5;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+        /**********************************************
+                                 * ADMIN KONTEJNER
+                 **********************************************/
+        .admin-container {
+            position: relative;
+            max-width: 800px;
+            margin: -150px auto 0; /* posun přes vlnu */
+            padding-bottom: 4rem;
+        }
+
+        .admin-box {
+            background-color: #fff;
+            border: 2px solid #9D4C83;
+            border-radius: 12px;
+            text-align: center;
+            padding: 2rem;
+            min-height: 400px;
+        }
+
+            .admin-box h1 {
+                font-size: 2rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .admin-box p.subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+        /**********************************************
+                                 * FILTRY
+                 **********************************************/
+        .filter-form {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+            .filter-form input, .filter-form select {
+                margin-right: 1rem;
+                padding: 0.4rem;
+                border: 1px solid #9D4C83;
+                border-radius: 4px;
+            }
+
+            .filter-form button {
+                background-color: #FFD5F2;
+                border: none;
+                color: #9D4C83;
+                font-size: 1rem;
+                font-weight: bold;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .filter-form button:hover {
+                    background-color: #ffc1ec;
+                }
+        /**********************************************
+                                 * TABULKA KATEGORIÍ
+                 **********************************************/
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            border: 1px solid #9D4C83;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #FFD5F2;
+            color: #9D4C83;
+        }
+        /**********************************************
+                             * TLAČÍTKA A COLLAPSE DETALŮ
+                 **********************************************/
+        .admin-button {
+            background-color: #FFD5F2;
+            border: none;
+            color: #9D4C83;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 0.5rem;
+            display: inline-block;
+        }
+
+            .admin-button:hover {
+                background-color: #ffc1ec;
+            }
+
+        .collapse-content {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .nested-table th, .nested-table td {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+        }
+
+        .nested-table th {
+            background-color: #ffe0f8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="logo">FlowerShop</div>
+        </div>
+    </header>
+
+    <!-- RŮŽOVÁ SEKCE S VLNOU -->
+    <section class="pink-section">
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ADMIN KONTEJNER -->
+    <div class="admin-container">
+        <div class="admin-box">
+            <h1>Správa kategorií</h1>
+            <p class="subtitle">Přidávat, upravovat a mazat kategorie</p>
+
+            <!-- Tlačítko pro přidání nové kategorie -->
+            <a href="@Url.Action("CreateCategory", "Admin")" class="admin-button">Přidat novou kategorii</a>
+
+            <!-- FILTRY -->
+            <form method="get" action="@Url.Action("ManageCategories", "Admin")" class="filter-form">
+                <input type="text" name="nameFilter" placeholder="Název kategorie" />
+                <input type="number" name="parentFilter" placeholder="ParentCategoryId" style="width:120px;" />
+                <button type="submit" class="admin-button">Filtrovat</button>
+            </form>
+
+            <!-- TABULKA KATEGORIÍ -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Název</th>
+                        <th>ParentCategoryId</th>
+                        <th>Detaily</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.Id</td>
+                            <td>@category.Name</td>
+                            <td>@(category.ParentCategoryId.HasValue ? category.ParentCategoryId.ToString() : "—")</td>
+                            <td>
+                                <button class="admin-button" type="button" data-toggle="collapse" data-target="#categoryDetails_@category.Id" aria-expanded="false" aria-controls="categoryDetails_@category.Id">
+                                    Zobrazit detaily
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Collapse s detaily kategorie (child kategorie) -->
+                        <tr>
+                            <td colspan="4" class="p-0">
+                                <div class="collapse" id="categoryDetails_@category.Id">
+                                    <div class="collapse-content">
+                                        <h5>Podkategorie</h5>
+                                        @if (category.Children != null && category.Children.Any())
+                                        {
+                                            <table class="nested-table table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Název</th>
+                                                        <th>Akce</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var child in category.Children)
+                                                    {
+                                                        <tr>
+                                                            <td>@child.Id</td>
+                                                            <td>@child.Name</td>
+                                                            <td>
+                                                                <a href="@Url.Action("EditCategory", "Admin", new { id = child.Id })" class="admin-button">Upravit</a>
+                                                                <a href="@Url.Action("DeleteCategory", "Admin", new { id = child.Id })" class="admin-button">Smazat</a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+                                        else
+                                        {
+                                            <p>Žádné podkategorie</p>
+                                        }
+                                        <!-- Tlačítko pro případnou úpravu celé kategorie -->
+                                        <a href="@Url.Action("EditCategory", "Admin", new { id = category.Id })" class="admin-button">Upravit kategorii</a>
+                                        <a href="@Url.Action("DeleteCategory", "Admin", new { id = category.Id })" class="admin-button">Smazat</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap a jQuery skripty -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
