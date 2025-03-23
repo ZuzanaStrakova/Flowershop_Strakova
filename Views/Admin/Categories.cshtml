@@ -277,8 +277,8 @@
                                                             <td>@child.Id</td>
                                                             <td>@child.Name</td>
                                                             <td>
-                                                                <a href="@Url.Action("EditCategory", "Admin", new { id = child.Id })" class="admin-button">Upravit</a>
-                                                                <a href="@Url.Action("DeleteCategory", "Admin", new { id = child.Id })" class="admin-button">Smazat</a>
+                                                                <a href="@Url.Action("EditCategory", "Admin", new { categoryId = child.Id })" class="admin-button">Upravit</a>
+                                                                <a href="@Url.Action("DeleteCategory", "Admin", new { categoryId = child.Id })" class="admin-button">Smazat</a>
                                                             </td>
                                                         </tr>
                                                     }
@@ -290,8 +290,8 @@
                                             <p>Žádné podkategorie</p>
                                         }
                                         <!-- Tlačítko pro případnou úpravu celé kategorie -->
-                                        <a href="@Url.Action("EditCategory", "Admin", new { id = category.Id })" class="admin-button">Upravit kategorii</a>
-                                        <a href="@Url.Action("DeleteCategory", "Admin", new { id = category.Id })" class="admin-button">Smazat</a>
+                                        <a href="@Url.Action("EditCategory", "Admin", new { categoryId = category.Id })" class="admin-button">Upravit kategorii</a>
+                                        <a href="@Url.Action("DeleteCategory", "Admin", new { categoryId = category.Id })" class="admin-button">Smazat</a>
                                     </div>
                                 </div>
                             </td>

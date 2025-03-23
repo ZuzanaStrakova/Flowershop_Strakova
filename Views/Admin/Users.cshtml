@@ -91,7 +91,7 @@
             <p class="subtitle">Filtrovat, upravovat a mazat uživatele</p>
             
             <!-- Filtry -->
-            <form method="get" action="@Url.Action("ManageUsers", "Admin")" class="filter-form">
+            <form method="get" action="@Url.Action("Users", "Admin")" class="filter-form">
                 <input type="text" name="usernameFilter" placeholder="Username" />
                 <input type="text" name="emailFilter" placeholder="Email" />
                 <select name="roleFilter">
@@ -101,6 +101,7 @@
                 </select>
                 <button type="submit" class="admin-button">Filtrovat</button>
             </form>
+            <a href="@Url.Action("RegisterUser", "Admin")" class="admin-button">Nový uživatel</a>
             
             <!-- Tabulka uživatelů -->
             <table>
@@ -140,8 +141,8 @@
                             <td>@Model[i].Phone</td>
                             <td>@Model[i].Adress</td>
                             <td>
-                                <a href="@Url.Action("EditAccount", "Admin", new { id = Model[i].Id })" class="admin-button">Upravit</a>
-                                <a href="@Url.Action("DeleteAccount", "Admin", new { id = Model[i].Id })" class="admin-button">Smazat</a>
+                                <a href="@Url.Action("EditUser", "Admin", new { id = Model[i].Id })" class="admin-button">Upravit</a>
+                                <a href="@Url.Action("DeleteUser", "Admin", new { id = Model[i].Id })" class="admin-button">Smazat</a>
                             </td>
                         </tr>
                     }

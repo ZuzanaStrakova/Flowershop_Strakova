@@ -44,14 +44,50 @@ namespace Flowershop_Strakova.Controllers
             return RedirectToAction("Categories");
         }
 
-        public IActionResult EditCategory()
+        [HttpGet]
+        public IActionResult EditCategory(int categoryId)
         {
+            Category categoryModel = _context.Categories.Find(categoryId);
+
+            return View("EditCategory", categoryModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditCategory(Category model)
+        {
+            _context.Categories.Update(model);
+            _context.SaveChanges();
+
             return RedirectToAction("Categories");
         }
 
-        public IActionResult DeleteCategory()
+        private void DeleteAllProductsByCategory(int categoryId)
         {
+            var products = _context.Products.Where(p => p.CategoryId == categoryId);
 
+            foreach(var product in products)
+            {
+                _context.Products.Remove(product);
+            }
+            _context.SaveChanges();
+        }
+
+        public IActionResult DeleteCategory(int categoryId)
+        {
+            var category = _context.Categories.Find(categoryId);
+
+            var children = _context.Categories.Where(c => c.ParentCategoryId == categoryId).ToList();
+            // Pokud existují podkategorie, smažou se také
+            foreach (var child in children)
+            {
+                DeleteAllProductsByCategory(child.Id);
+                _context.Categories.Remove(child);
+                _context.SaveChanges();
+            }
+
+            DeleteAllProductsByCategory(category.Id);
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
 
             return RedirectToAction("Categories");
         }
@@ -80,12 +116,14 @@ namespace Flowershop_Strakova.Controllers
             return RedirectToAction("Register", "Admin");
         }
 
-        public IActionResult Register()
+        public IActionResult RegisterUser()
         {
+
+
             return View();
         }
 
-        public IActionResult EditUser()
+        public IActionResult EditUser(int id)
         {
             return View();
         }
@@ -103,9 +141,50 @@ namespace Flowershop_Strakova.Controllers
             return RedirectToAction("Users");
         }
 
-        public IActionResult DeleteUser()
+        private void DeleteAllShoppingCartsByUser(int userId)
         {
-            return View();
+            var carts = _context.ShoppingCarts.Where(c => c.AccountId == userId);
+            foreach (var cart in carts)
+            {
+                _context.ShoppingCarts.Remove(cart);
+            }
+            _context.SaveChanges();
+        }
+
+        private void DeleteAllOrdersByUser(int userId)
+        {
+            var orders = _context.Orders.Where(c => c.AccountId == userId);
+            foreach (var order in orders)
+            {
+                DeleteOrder(order.Id);
+            }
+            _context.SaveChanges();
+        }
+
+        private void DeleteOrder(int orderId)
+        {
+            var items = _context.OrderItems.Where(c => c.OrderId == orderId);
+            foreach (var item in items)
+            {
+                _context.OrderItems.Remove(item);
+                _context.SaveChanges();
+            }
+
+            var order = _context.Orders.Find(orderId);
+            _context.Orders.Remove(order);
+            _context.SaveChanges();
+        }
+
+        public IActionResult DeleteUser(int id)
+        {
+            Account user = _context.Accounts.Find(id);
+
+            DeleteAllOrdersByUser(id);
+            DeleteAllShoppingCartsByUser(id);
+            _context.Accounts.Remove(user);
+            _context.SaveChanges();
+
+            return RedirectToAction("Users");
         }
     }
 }
