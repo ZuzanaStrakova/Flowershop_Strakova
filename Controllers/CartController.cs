@@ -110,8 +110,59 @@ namespace Flowershop_Strakova.Controllers
         //    return RedirectToAction("Index", "Products");
         //}
 
+        [HttpGet]
         public IActionResult Order()
         {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Order(string delivery, string payment)
+        {
+            ViewBag.Delivery = delivery;
+            ViewBag.Payment = payment;
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult OrderBillingInfo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult OrderBillingInfo(string email, string phoneNumber, string fullAddress)
+        {
+
+            var order = new Order
+            {
+                Id = 0,
+                AccountId = HttpContext.Session.GetInt32("UserId") ?? 0,
+                Email = email,
+                Phone = phoneNumber,
+                DeliveryAdress = fullAddress,
+                DeliveryMethod = ViewBag.Delivery,
+                PaymentMethod = ViewBag.Payment,
+                Status = "New",
+                OrderDate = DateTime.Now
+            };
+
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
+
+            var orderItems = _context.ShoppingCarts.Where(sc => sc.AccountId == order.AccountId).Select(c => new OrderItem
+            {
+                Id = 0,
+                OrderId = order.Id,
+                ProductId = c.ProductId,
+                ProductPrice = c.Product.Price,
+                Quantity = c.Quantity
+            }).ToList();
+
+            _context.OrderItems.AddRange(orderItems);
+            _context.SaveChanges();
+
             return View();
         }
     }

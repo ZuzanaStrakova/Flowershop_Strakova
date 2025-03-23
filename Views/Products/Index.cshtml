@@ -1,20 +1,24 @@
 ﻿@model List<Flowershop_Strakova.Models.ProductViewModel>
-@* @model IEnumerable<Flowershop_Strakova.Models.ProductViewModel> *@
-
 @{
-    ViewBag.Title = "FlowerShop - Domů";
-    Layout = null; // Případně využijte vlastní layout
+    Layout = null;
+    ViewBag.Title = "FlowerShop";
     var categories = ViewBag.Categories as IEnumerable<Flowershop_Strakova.Entities.Category>;
 }
-
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <title>@ViewBag.Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-..."
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
     <style>
         /* RESET A ZÁKLADNÍ NASTAVENÍ */
         * {
@@ -42,14 +46,7 @@
         ul {
             list-style: none;
         }
-
-        .hidden {
-            display: none;
-        }
-
-        /********************************************
-                                 * HLAVIČKA – BÍLÁ ČÁST
-                                 ********************************************/
+        /* HLAVIČKA */
         header {
             width: 100%;
             background-color: #fff;
@@ -112,10 +109,7 @@
             color: #666;
             font-size: 1.2rem;
         }
-
-        /********************************************
-                                 * RŮŽOVÁ SEKCE – NAV BAR A PRODUKT
-                                 ********************************************/
+        /* RŮŽOVÁ SEKCE – NAVIGACE, TEXT A VLNKA */
         .pink-section {
             background-color: #FFF3FB;
             position: relative;
@@ -158,127 +152,17 @@
             margin: 0 auto 0.5rem;
         }
 
-        .product-container {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .product-image img {
-            max-width: 350px;
-            border-radius: 8px;
-            width: 100%;
-        }
-
-        .product-details {
-            max-width: 400px;
-            text-align: left;
-        }
-
-            .product-details h2 {
-                color: #9D4C83;
-                font-size: 2rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .product-details p {
-                margin-bottom: 0.5rem;
-                line-height: 1.4;
-            }
-
-        .product-count {
-            color: #333;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .rating-section {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .rating-stars {
-            display: flex;
-            gap: 0.2rem;
-        }
-
-        .star-empty {
-            color: #ccc;
-        }
-
-        .star-filled {
-            color: #9D4C83;
-        }
-
-        .rating-text {
-            color: #9D4C83;
-            font-size: 1rem;
-            white-space: nowrap;
-        }
-
-        .product-footer {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
-
-        .product-price {
-            font-size: 1.2rem;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .btn-add-to-cart {
-            display: inline-block;
-            background-color: #FFD5F2;
-            color: #333;
-            padding: 0.6rem 1.4rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-            .btn-add-to-cart:hover {
-                background-color: #ffcaee;
-            }
-
-        .wave {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 120px;
-            overflow: hidden;
-            line-height: 0;
-        }
-
-            .wave svg {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
-
-        /********************************************
-                                 * DROPDOWNS – NOVÉ STYLY PRO NAV
-                                 ********************************************/
         .menu-dropdown {
             position: relative;
         }
-
-            .menu-dropdown > a {
+            /* Hlavní odkaz pro otevření dropdownu – dostáváme třídu dropdown-toggle */
+            .menu-dropdown > a.dropdown-toggle {
                 display: inline-flex;
                 align-items: center;
                 gap: 0.3rem;
                 cursor: pointer;
             }
-        /* Místo display: none používáme opacity a transform pro animaci */
+
         .dropdown-content {
             position: absolute;
             top: calc(100% + 0.3rem);
@@ -305,132 +189,207 @@
                     background-color: #fcd5e5;
                     border-radius: 4px;
                 }
-        /* Po otevření menu nastavíme opacity, transformaci a povolíme interakci */
+
         .menu-dropdown.show .dropdown-content {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
-        /* Otočení šipky při otevřeném dropdownu */
+        /* Původní pravidlo pro otočení šipky u dropdownů */
         .menu-dropdown.show > a i {
             transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+        /* Přepis pro uživatelský dropdown – ikona se neotáčí */
+        .user-dropdown.show > a i {
+            transform: none !important;
         }
 
-        /********************************************
-                                 * SEKCE RECENZÍ – BÍLÉ POZADÍ
-                                 ********************************************/
-        .reviews {
-            background-color: #fff;
-            padding: 3rem 1rem;
+        .text-box {
             text-align: center;
+            margin: 2rem auto 0;
         }
 
-            .reviews h2 {
-                color: #9D4C83;
-                font-size: 2rem;
-                margin-bottom: 2rem;
+            .text-box h2,
+            .text-box .subheading {
+                display: block;
+                /* Odebrána bílá barva pozadí */
+                /* background-color: #fff; */
+                border-radius: 4px;
+                padding: 0.4rem 1rem;
+                margin: 1rem auto;
+                width: fit-content;
             }
 
-        .reviews-container {
-            max-width: 900px;
-            margin: 0 auto;
+            .text-box h2 {
+                font-size: 2rem;
+                color: #9D4C83;
+            }
+
+            .text-box .subheading {
+                font-size: 1.6rem;
+                color: #f9a3c9;
+            }
+
+            .text-box .call-to-action {
+                display: block;
+                margin: 1rem 0;
+                font-size: 1.6rem;
+                color: #9D4C83;
+            }
+
+        .wave {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+        /* SEKCE PRODUKTŮ */
+        .product-section {
+            position: relative;
+            z-index: 1;
+            margin-top: -40px;
+            padding: 2rem;
+        }
+
+        .product-list {
+            display: grid;
+            /* Fixní šířka buňky: 250px, s centrováním */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        /* MARKUP A STYLY PRODUKTU */
+        .product-item {
+            background-color: #FFF8FB;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            height: 100%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .new-review-form {
-            background-color: #FFF3FB;
-            width: 100%;
-            max-width: 500px;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            text-align: left;
-        }
-
-            .new-review-form label {
-                display: block;
-                font-weight: bold;
-                color: #9D4C83;
-                margin-bottom: 0.5rem;
+            .product-item:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             }
 
-        .new-review-input {
+        .product-image {
+            height: 200px;
             width: 100%;
-            height: 70px;
-            resize: none;
-            background-color: #FFF3FB;
-            border: 1px solid #FFD5F2;
-            border-radius: 4px;
-            font-family: sans-serif;
+            overflow: hidden;
             margin-bottom: 1rem;
-            padding: 0.5rem;
         }
 
-        .stars-and-button {
-            display: flex;
-            align-items: center;
-        }
-
-            .stars-and-button .star-inputs {
-                display: flex;
-                gap: 0.4rem;
-                margin-right: 2rem;
+            .product-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
             }
 
-        .new-review-form button {
-            background-color: #FFD5F2;
-            color: #333;
-            padding: 0.4rem 1rem;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: auto;
+        .product-title {
+            margin: 0.5rem 0;
+            font-size: 1.2rem;
+            color: #9D4C83;
+            font-weight: 600;
         }
 
-            .new-review-form button:hover {
-                background-color: #ffcaee;
+            .product-title a {
+                color: #9D4C83;
+                text-decoration: none;
             }
 
-        .review-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        .review-card {
-            background-color: #FFF3FB;
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: left;
-            border: none;
-        }
-
-            .review-card .review-author {
-                font-weight: bold;
-                display: flex;
-                align-items: center;
-                margin-bottom: 0.3rem;
-                color: #333;
-            }
-
-                .review-card .review-author i {
-                    margin-right: 0.5rem;
-                    color: #9D4C83;
+                .product-title a:hover {
+                    text-decoration: underline;
                 }
 
-            .review-card .stars {
-                color: #9D4C83;
-                margin-bottom: 0.5rem;
+        .product-description {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            color: #e53935;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+        }
+
+        .star {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+            .star.filled {
+                color: #ffc107;
             }
 
-        /********************************************
-                                 * FOOTER
-                                 ********************************************/
+        .product-buy {
+            margin: 0.5rem auto;
+        }
+
+            .product-buy .btn {
+                background-color: #FFD5F2;
+                color: #333;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: background-color 0.2s ease;
+                width: auto;
+            }
+
+                .product-buy .btn:hover {
+                    background-color: #ffcaee;
+                }
+
+        .product-availability {
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .in-stock {
+            color: #388e3c;
+        }
+
+        .out-of-stock {
+            color: #e53935;
+        }
+        /* FOOTER */
         footer {
             border-top: 1px solid #ccc;
             color: #666;
@@ -440,37 +399,7 @@
     </style>
 </head>
 <body>
-    <!-- Horní navigační lišta -->
-@*     <header class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="#">FlowerShop</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Obsah lišty -->
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <!-- Vyhledávací pole uprostřed -->
-            <form class="form-inline mx-auto" method="get" action="@Url.Action("Search", "Products")">
-                <input name="query" class="form-control mr-sm-2" type="search" placeholder="Hledat" aria-label="Hledat">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Hledat</button>
-            </form>
-            <!-- Profilový dropdown v pravém rohu -->
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown">
-                        @Context.Session.GetString("User") [@Context.Session.GetString("Role")]
-                          <img src="~/images/profile-placeholder.png" alt="Profil" class="profile-img"> 
-                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                        <a class="dropdown-item" href="#">Profil</a>
-                        <a class="dropdown-item" href="#">Nastavení</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Odhlásit se</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </header>  *@
-
+    <!-- HLAVIČKA -->
     <header>
         <div class="header-top">
             <a href="@Url.Action("Index", "Products")" class="logo">FlowerShop</a>
@@ -479,17 +408,24 @@
                     <input name="query" type="search" placeholder="Hledat..." aria-label="Hledat" />
                     <i class="fa fa-search" onclick="this.closest('form').submit();"></i>
                 </form>
-
                 <a href="@Url.Action("Index", "Cart")">
                     <i class="fa fa-shopping-cart icon-btn"></i>
                 </a>
-                <i class="fa fa-user icon-btn"></i>
+                <!-- Uživ. dropdown s třídou dropdown-toggle -->
+                <div class="user-dropdown menu-dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="fa fa-user icon-btn"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="@Url.Action("Logout", "Auth")">Odhlásit se</a>
+                    </div>
+                </div>
                 <span class="user-name">@Context.Session.GetString("User") [@Context.Session.GetString("Role")]</span>
             </div>
         </div>
     </header>
 
-    <!-- RŮŽOVÁ SEKCE – NAV BAR A PRODUKT -->
+    <!-- RŮŽOVÁ SEKCE – NAVIGACE, TEXT A VLNKA -->
     <section class="pink-section">
         <nav class="menu-nav">
             @if (categories != null)
@@ -497,9 +433,8 @@
                 foreach (var mainCategory in categories.Where(c => c.ParentCategoryId == null))
                 {
                     <div class="menu-dropdown" id="menuDropdown_@mainCategory.Id">
-                        <a href="#">
-                            @mainCategory.Name
-                            <i class="fa fa-caret-down"></i>
+                        <a href="@Url.Action("Search", "Products", new { selectedCategory = mainCategory.Id })" class="dropdown-toggle">
+                            @mainCategory.Name <i class="fa fa-caret-down"></i>
                         </a>
                         @if (mainCategory.Children != null && mainCategory.Children.Any())
                         {
@@ -516,34 +451,12 @@
                 }
             }
         </nav>
-
         <hr class="nav-separator" />
-
-        <!-- Detail vybraného produktu -->
-@*         <div class="product-container">
-            <div class="product-image">
-                <img src="@Model.ImageUrl" />
-            </div>
-            <div class="product-details">
-                <h2>@Model.Name</h2>
-                <p>@Model.Description</p>
-                <p class="product-count">Počet kusů: @Model.StorageAmount kusů</p>
-                <div class="rating-section">
-                    <div class="rating-stars">
-                        @for (int i = 1; i <= 5; i++)
-                        {
-                            <i class="fa fa-star @(i <= Model.Rating ? "star-filled" : "star-empty")"></i>
-                        }
-                    </div>
-                    <span class="rating-text">@Model.Rating/5 &nbsp; @Model.RatingCount recenzí</span>
-                </div>
-                <div class="product-footer">
-                    <span class="product-price">Cena @(Model.Price.ToString("F2")) Kč</span>
-                    <button class="btn-add-to-cart">Přidat do košíku</button>
-                </div>
-            </div>
-        </div> *@
-
+        <div class="text-box">
+            <h2>Nejlepší internetové Květinářství</h2>
+            <div class="subheading">Stovky čerstvých květin</div>
+            <div class="call-to-action">Objednej si svoji květinu na tři kliknutí</div>
+        </div>
         <div class="wave">
             <svg viewBox="0 0 500 150" preserveAspectRatio="none">
                 <path d="M0.00,49.98
@@ -555,125 +468,93 @@
         </div>
     </section>
 
-    <!-- Hlavní obsah stránky -->
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Postranní lišta s kategoriemi -->
-            <nav class="col-md-3 sidebar">
-                <h5>Kategorie</h5>
-                <div id="accordion">
-                    <!-- Řezané květiny -->
-                    <div class="card">
-                        <div class="card-header p-1" id="headingOne">
-                            <h6 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#collapseOne">
-                                    Řezané květiny
-                                </button>
-                            </h6>
-                        </div>
-                        <div id="collapseOne" class="collapse" data-parent="#accordion">
-                            <div class="card-body p-1">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 11 })">Růže</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 12 })">Tulipány</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 13 })">Gerbery</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 14 })">Lilie</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 15 })">Chryzantémy</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+    <!-- SEKCE PRODUKTŮ -->
+    <section class="product-section">
+        <div class="product-list">
+            @foreach (var product in Model)
+            {
+                <div class="product-item">
+                    <!-- Obrázek produktu -->
+                    <div class="product-image">
+                        <img src="@product.ImageUrl" alt="@product.Name" />
                     </div>
-                    <!-- Květinové kytice a aranže -->
-                    <div class="card">
-                        <div class="card-header p-1" id="headingTwo">
-                            <h6 class="mb-0">
-                                <button class="btn btn-link btn-block text-left collapsed" data-toggle="collapse" data-target="#collapseTwo">
-                                    Květinové kytice a aranže
-                                </button>
-                            </h6>
-                        </div>
-                        <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                            <div class="card-body p-1">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 21 })">Dárkové kytice</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 22 })">Slavnostní aranžmá</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 23 })">Firemní aranžmá</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <!-- Název produktu -->
+                    <h3 class="product-title">
+                        <a href="@Url.Action("Details", "Products", new { id = product.Id })">
+                            @product.Name
+                        </a>
+                    </h3>
+                    <!-- Popis produktu (pokud existuje) -->
+                    @if (!string.IsNullOrEmpty(product.Description))
+                    {
+                        <p class="product-description">@product.Description</p>
+                    }
+                    <!-- Cena produktu -->
+                    <div class="product-price">
+                        <span class="price">@string.Format("{0:N0} Kč", product.Price)</span>
                     </div>
-                    <!-- Pokojové a kancelářské rostliny -->
-                    <div class="card">
-                        <div class="card-header p-1" id="headingThree">
-                            <h6 class="mb-0">
-                                <button class="btn btn-link btn-block text-left collapsed" data-toggle="collapse" data-target="#collapseThree">
-                                    Pokojové a kancelářské rostliny
-                                </button>
-                            </h6>
-                        </div>
-                        <div id="collapseThree" class="collapse" data-parent="#accordion">
-                            <div class="card-body p-1">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 31 })">Sukulenty a kaktusy</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 32 })">Orchideje</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 33 })">Fikusy a palmy</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 34 })">Bonsaje</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("CategorySelected", "Products", new { selectedCategory = 35 })">Bylinky a aromatické rostliny</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <!-- Recenze / rating -->
+                    <div class="product-rating">
+                        <span class="rating-value">@product.Rating.ToString("0.0")</span>
+                        <span class="rating-stars">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="star @(i <= product.Rating ? "filled" : "")">★</span>
+                            }
+                        </span>
+                        <span class="rating-count">(@product.RatingCount)</span>
                     </div>
-                    <!-- Přidejte další kategorie dle potřeby -->
-                </div>
-            </nav>
-
-
-            <!-- Hlavní sekce pro zobrazení produktů -->
-            <main class="col-md-9">
-                <div class="row">
-                    <div class="row">
-                        @foreach (var product in Model)
+                    <!-- Tlačítko pro přidání do košíku -->
+                    <div class="product-buy">
+                        <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn">Koupit</button>
+                        </form>
+                    </div>
+                    <!-- Dostupnost produktu -->
+                    <div class="product-availability">
+                        @if (product.StorageAmount > 10)
                         {
-                            <div class="col-md-4">
-                                @Html.Partial("_ProductListPartial", product)
-
-@*                              @Html.PartialAsync("_ProductListPartial", product) *@
-                            </div>
+                            <span class="in-stock">Skladem > 10 ks</span>
+                        }
+                        else if (product.StorageAmount > 0)
+                        {
+                            <span class="in-stock">Skladem @product.StorageAmount ks</span>
+                        }
+                        else
+                        {
+                            <span class="out-of-stock">Vyprodáno</span>
                         }
                     </div>
                 </div>
-            </main>
+            }
         </div>
-    </div>
+    </section>
 
-    <!-- Bootstrap a jQuery skripty -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FOOTER -->
+    <footer>
+        <div>
+            © 2025 - Flowershop_Strakova - <a href="/Home/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+        // Připojení event listenerů k prvkům s třídou dropdown-toggle
+        document.querySelectorAll('.dropdown-toggle').forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                var parent = toggle.closest('.menu-dropdown');
+                parent.classList.toggle('show');
+                e.preventDefault();
+            });
+        });
+        // Zavření dropdownů, když klikneme mimo ně
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.menu-dropdown')) {
+                document.querySelectorAll('.menu-dropdown.show').forEach(function(drop) {
+                    drop.classList.remove('show');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

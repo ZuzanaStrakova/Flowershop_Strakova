@@ -53,7 +53,7 @@ namespace Flowershop_Strakova.Controllers
         {
             HttpContext.Session.Remove("User");
 
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("Login", "Auth");
         }
 
 

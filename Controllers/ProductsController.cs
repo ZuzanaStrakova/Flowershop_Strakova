@@ -28,7 +28,7 @@ namespace Flowershop_Strakova.Controllers
                 StorageAmount = p.StorageAmount
             }).ToList();
 
-            foreach(var product in products)
+            foreach (var product in products)
             {
                 if (product.RatingCount != 0)
                 {
@@ -60,7 +60,7 @@ namespace Flowershop_Strakova.Controllers
                 StorageAmount = product.StorageAmount
             };
 
-            
+
             if (product.RatingCount != 0)
             {
                 product.Rating = product.Rating / product.RatingCount;
@@ -70,32 +70,40 @@ namespace Flowershop_Strakova.Controllers
             return View(model);
         }
 
-        
-        public IActionResult Search(string query)
+
+        public IActionResult Search(string query, int? selectedCategory)
         {
-            if (string.IsNullOrWhiteSpace(query))
+            // Vycházíme ze všech produktů
+            var productsQuery = _context.Products.AsQueryable();
+
+            // Pokud je zadán vyhledávací dotaz, filtrujeme podle názvu nebo popisu
+            if (!string.IsNullOrWhiteSpace(query))
             {
-                // Pokud je vyhledávací dotaz prázdný, přesměrujeme na výpis všech produktů
-                return RedirectToAction("Index");
+                productsQuery = productsQuery.Where(p =>
+                    p.Name.Contains(query) || p.Description.Contains(query));
             }
 
-            // Vyhledáváme produkty podle názvu nebo popisu
-            var products = _context.Products
-                             .Where(p => p.Name.Contains(query) || p.Description.Contains(query))
-                             .Select(p => new ProductViewModel
-                              {
-                                  Id = p.Id,
-                                  Name = p.Name,
-                                  Description = p.Description,
-                                  Price = p.Price,
-                                  ImageUrl = p.ImageUrl,
-                                  Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
-                                  RatingCount = _context.Comments.Where(c => c.ProductId == p.Id).Count(),
-                                  IsTopProduct = p.IsTopProduct,
-                                  StorageAmount = p.StorageAmount
-                              })
-                             .ToList();
+            // Pokud je zadána kategorie, filtrujeme produkty podle CategoryId
+            if (selectedCategory.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.CategoryId == selectedCategory.Value);
+            }
 
+            // Projekce do view modelu
+            var products = productsQuery.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+                Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
+                RatingCount = _context.Comments.Where(c => c.ProductId == p.Id).Count(),
+                IsTopProduct = p.IsTopProduct,
+                StorageAmount = p.StorageAmount
+            }).ToList();
+
+            // Vypočítáme průměrné hodnocení, pokud existují recenze
             foreach (var product in products)
             {
                 if (product.RatingCount != 0)
@@ -104,8 +112,13 @@ namespace Flowershop_Strakova.Controllers
                 }
             }
 
+            // Pro dynamické zobrazení kategorií ve View
+            var categories = _context.Categories.Include("Children").ToList();
+            ViewBag.Categories = categories;
+
             return View("Index", products);
         }
+
 
 
 
