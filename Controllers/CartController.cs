@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Flowershop_Strakova.Data;
 using Flowershop_Strakova.Entities;
 using Flowershop_Strakova.Models;
+using System.Data;
+using System.Numerics;
 
 namespace Flowershop_Strakova.Controllers
 {
@@ -24,12 +26,28 @@ namespace Flowershop_Strakova.Controllers
             {
                 Id = c.Id,
                 Name = c.Product.Name,
-                Price = c.ProductId,
+                Price = c.Product.Price,
                 Quantity = c.Quantity,
                 ImageUrl = c.Product.ImageUrl
             }).ToList();
 
             return View(cart);
+        }
+
+        [HttpPost]
+        public IActionResult Index(List<ShoppingCartItemViewModel> model)
+        {
+            foreach(var item in model)
+            {
+                _context.ShoppingCarts.Update(new ShoppingCart
+                {
+                    Id = item.Id,
+                    Quantity = item.Quantity
+                });
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Order");
         }
 
         [HttpPost]
@@ -115,24 +133,45 @@ namespace Flowershop_Strakova.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Order(string delivery, string payment)
         {
-            ViewBag.Delivery = delivery;
-            ViewBag.Payment = payment;
+            TempData["Delivery"] = delivery;
+            TempData["Payment"] = payment;
 
-            return View();
+
+            return RedirectToAction("OrderBillingInfo");
         }
 
         [HttpGet]
         public IActionResult OrderBillingInfo()
         {
-            return View();
+            Account account = _context.Accounts.Find(HttpContext.Session.GetInt32("UserId") ?? 0);
+
+            AccountViewModel model = new AccountViewModel()
+            {
+                Id = account.Id,
+                Username = account.Username,
+                Email = account.Email,
+                Phone = account.Phone,
+                Adress = account.Adress
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult OrderBillingInfo(string email, string phoneNumber, string fullAddress)
         {
+
+            var deliveryResult = TempData.TryGetValue("Delivery", out object delivery);
+            var paymentResult = TempData.TryGetValue("Payment", out object payment);
+
+            if (!deliveryResult || !paymentResult)
+            {
+                return RedirectToAction("Order");
+            }
 
             var order = new Order
             {
@@ -141,8 +180,8 @@ namespace Flowershop_Strakova.Controllers
                 Email = email,
                 Phone = phoneNumber,
                 DeliveryAdress = fullAddress,
-                DeliveryMethod = ViewBag.Delivery,
-                PaymentMethod = ViewBag.Payment,
+                DeliveryMethod = (string)delivery,
+                PaymentMethod = (string)payment,
                 Status = "New",
                 OrderDate = DateTime.Now
             };
@@ -163,7 +202,28 @@ namespace Flowershop_Strakova.Controllers
             _context.OrderItems.AddRange(orderItems);
             _context.SaveChanges();
 
-            return View();
+
+            // nezapomenout vyprázdnit košík
+            _context.ShoppingCarts.RemoveRange(_context.ShoppingCarts.Where(sc => sc.AccountId == order.AccountId));
+            _context.SaveChanges();
+
+            TempData["OrderId"] = order.Id;
+
+            return RedirectToAction("OrderFinished");
         }
+
+        public IActionResult OrderFinished()
+        {
+            if(!TempData.TryGetValue("OrderId", out object orderId))
+            {
+                return RedirectToAction("Index", "Products");
+            }
+
+            var order = _context.Orders.Find((int)orderId);
+
+            order.OrderItems.AddRange(_context.OrderItems.Where(x => x.OrderId == order.Id));
+
+            return View(order);
+        }   
     }
 }

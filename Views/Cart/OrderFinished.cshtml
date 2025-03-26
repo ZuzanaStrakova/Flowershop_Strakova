@@ -1,0 +1,311 @@
+﻿@model Flowershop_Strakova.Entities.Order
+
+@{
+    Layout = null;
+    ViewBag.Title = "FlowerShop";
+}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlowerShop - Potvrzení objednávky</title>
+    <!-- Google Font (pouze Neuton pro logo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Neuton&display=swap" rel="stylesheet" />
+
+    <!-- Odkaz na Font Awesome pro ikony -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-..."
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <style>
+        /* RESET A ZÁKLADNÍ NASTAVENÍ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: sans-serif;
+            color: #9D4C83;
+            background-color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /********************************************
+                 * HLAVIČKA – BÍLÁ ČÁST
+                 ********************************************/
+        header {
+            width: 100%;
+            background-color: #fff;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Neuton', serif;
+            font-size: 3rem;
+            color: #9D4C83;
+            font-weight: bold;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+            .search-container input[type="search"] {
+                font-size: 1.2rem;
+                padding: 0.6rem 2.2rem 0.6rem 1rem;
+                border: 1px solid #9D4C83;
+                border-radius: 4px;
+                background-color: #fff;
+            }
+
+            .search-container input::placeholder {
+                color: #9D4C83;
+            }
+
+            .search-container .fa-search {
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #9D4C83;
+                cursor: pointer;
+                font-size: 1.5rem;
+            }
+
+        .icon-btn {
+            color: #9D4C83;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .user-name {
+            margin-left: 0.3rem;
+            font-size: 1.2rem;
+        }
+
+        /********************************************
+                 * RŮŽOVÁ SEKCE (NAV BAR)
+                 ********************************************/
+        .pink-section {
+            background-color: #FFF3FB;
+            position: relative;
+            /* Pro příklad dám padding dolů, aby se text odsunul od vlny */
+            padding-bottom: 10rem;
+        }
+
+        .menu-nav {
+            display: flex;
+            justify-content: center;
+            font-size: 1.4rem;
+            gap: 6rem;
+            padding: 0.8rem 0;
+        }
+
+            .menu-nav a {
+                color: #9D4C83;
+                font-weight: 600;
+                padding: 0.5rem 0.3rem;
+            }
+
+                .menu-nav a i {
+                    margin-left: 0.3rem;
+                    font-size: 1.4rem;
+                }
+
+                .menu-nav a:hover {
+                    background-color: #fcd5e5;
+                    border-radius: 4px;
+                }
+
+        .nav-separator {
+            border: none;
+            height: 1px;
+            background-color: #9D4C83;
+            max-width: 80%;
+            margin: 0 auto 3rem;
+        }
+
+        /********************************************
+                 * HLAVNÍ OBSAH – KONFIRMACE OBJEDNÁVKY
+                 ********************************************/
+        .confirmation-container {
+            max-width: 600px; /* pro lepší čitelnost */
+            margin: 0 auto; /* vycentrování */
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+            .confirmation-container h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .confirmation-container p {
+                font-size: 1.2rem;
+                margin-bottom: 1.2rem;
+            }
+
+        .info-section {
+            text-align: left;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+            .info-section h2 {
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
+                text-align: left;
+            }
+
+        /* Tlačítko "Nová objednávka" */
+        .new-order-button {
+            background-color: #FFD5F2;
+            color: #9D4C83;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none; /* aby to nevypadalo jako odkaz */
+        }
+
+            .new-order-button:hover {
+                background-color: #ffcaee;
+            }
+
+        /********************************************
+                 * VLNA DOLE
+                 ********************************************/
+        .wave {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+            .wave svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+        /********************************************
+                 * FOOTER
+                 ********************************************/
+        footer {
+            border-top: 1px solid #ccc;
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- HLAVIČKA -->
+    <header>
+        <div class="header-top">
+            <a href="@Url.Action("Index", "Products")" class="logo">FlowerShop</a>
+            <div class="top-nav-right">
+                <div class="search-container">
+                    <input type="search" placeholder="Hledat..." />
+                    <i class="fa fa-search"></i>
+                </div>
+                <a href="@Url.Action("Index", "Cart")">
+                    <i class="fa fa-shopping-cart icon-btn"></i>
+                </a>
+                <i class="fa fa-user icon-btn"></i>
+                <span class="user-name">
+                    @Context.Session.GetString("User") [@Context.Session.GetString("Role")]
+                </span>
+            </div>
+        </div>
+    </header>
+
+        <!-- HLAVNÍ OBSAH: KONFIRMACE OBJEDNÁVKY -->
+        <div class="confirmation-container">
+            <h1>Objednávka vyřízena!</h1>
+            <p>Děkujeme, že nakupujete na FlowerShop.</p>
+
+            <div class="info-section">
+                <h2>Informace o objednávce</h2>
+                <p><strong>Číslo objednávky:</strong> @Model.Id</p>
+                <p><strong>Telefon:</strong> @Model.Phone</p>
+                <p><strong>E-mail:</strong> @Model.Email</p>
+                <p><strong>Datum objednání:</strong> @Model.OrderDate</p>
+                <p><strong>Platební metoda:</strong> @Model.PaymentMethod Kč</p>
+                <p><strong>Adresa doručení:</strong> @Model.DeliveryAdress</p>
+                <hr class="nav-separator" />
+@*                 @foreach (var item in Model.OrderItems)
+                {
+                    <p><strong>Produkt:</strong> @item.ProductId</p>
+                    <p><strong>Cena:</strong> @item.ProductPrice Kč</p>
+                    <p><strong>Množství:</strong> @item.Quantity</p>
+                } *@
+                <p><strong>Celková cena bez DPH:</strong> @(Model.OrderItems.Sum(x => x.ProductPrice).ToString("F2"))</p>
+                <p><strong>Celková cena:</strong> @(Model.OrderItems.Sum(x => x.ProductPrice * 1.15m).ToString("F2"))</p>
+            </div>
+
+            <a href="@Url.Action("Index", "Products")" class="new-order-button">
+                Vrátit se na přehled produktů
+            </a>
+        </div>
+
+        <!-- VLNA DOLE -->
+        <div class="wave">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                <path d="M0.00,49.98
+                         C150.00,150.00 350.00,-50.00 500.00,49.98
+                         L500.00,150.00 L0.00,150.00 Z"
+                      style="stroke: none; fill: #ffffff;">
+                </path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-top footer text-muted">
+        <div>
+            © 2025 - Flowershop_Strakova - <a href="/Home/Privacy">Privacy</a>
+        </div>
+    </footer>
+</body>
+</html>

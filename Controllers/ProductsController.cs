@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Flowershop_Strakova.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Flowershop_Strakova.Controllers
 {
@@ -22,8 +23,8 @@ namespace Flowershop_Strakova.Controllers
                 Description = p.Description,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
-                Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
                 RatingCount = _context.Comments.Where(c => c.ProductId == p.Id).Count(),
+                Rating = _context.Comments.Where(c => c.ProductId == p.Id).Sum(c => c.Rating),
                 IsTopProduct = p.IsTopProduct,
                 StorageAmount = p.StorageAmount
             }).ToList();
@@ -54,17 +55,19 @@ namespace Flowershop_Strakova.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
-                Rating = _context.Comments.Where(c => c.ProductId == product.Id).Sum(c => c.Rating),
                 RatingCount = _context.Comments.Where(c => c.ProductId == product.Id).Count(),
+                Rating = _context.Comments.Where(c => c.ProductId == product.Id).Sum(c => c.Rating),
                 IsTopProduct = product.IsTopProduct,
                 StorageAmount = product.StorageAmount
             };
 
 
-            if (product.RatingCount != 0)
+            
+            if (model.RatingCount != 0)
             {
-                product.Rating = product.Rating / product.RatingCount;
+                model.Rating = model.Rating / model.RatingCount;
             }
+            
 
 
             return View(model);

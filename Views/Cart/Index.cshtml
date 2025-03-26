@@ -363,25 +363,8 @@
         </div>
     </header>
 
-    <!-- RŮŽOVÁ SEKCE – NAV BAR A KOŠÍK -->
-    <section class="pink-section">
-        <nav class="menu-nav">
-            <a href="#">
-                Řezané květiny
-                <i class="fa fa-caret-down"></i>
-            </a>
-            <a href="#">
-                Květinové kytice a aranže
-                <i class="fa fa-caret-down"></i>
-            </a>
-            <a href="#">
-                Pokojové a kancelářské rostliny
-                <i class="fa fa-caret-down"></i>
-            </a>
-        </nav>
-        <hr class="nav-separator" />
-
         <!-- Obsah košíku -->
+    <form method="post">
         <div class="cart-content">
             <h1>Váš nákupní košík</h1>
             <table class="cart-table">
@@ -400,15 +383,15 @@
                             <tr>
                                 <td>
                                     <div class="thumbnail-wrapper">
-                                        <img src="https://storage.googleapis.com/regalflowers-cdn/img-2022-07-Regal-Red-Roses-Bouquet-1_11zon-1-scaled.jpg" alt="Růže" />
+                                        <img src="@item.ImageUrl" alt="Růže" />
                                     </div>
                                     @item.Name
                                 </td>
                                 <td>
                                     <div class="quantity-wrapper">
-                                        <button class="arrow-btn" data-action="decrement">-</button>
-                                        <input type="number" class="quantity-input" value="@item.Quantity" min="1" />
-                                        <button class="arrow-btn" data-action="increment">+</button>
+                                        <button type="button" class="arrow-btn" data-action="decrement">-</button>
+                                        <input type="number" name="quantity" class="quantity-input" value="@item.Quantity" min="1" />
+                                        <button type="button" class="arrow-btn" data-action="increment">+</button>
                                     </div>
                                 </td>
                                 <td>@item.Price.ToString("F2") Kč</td>
@@ -422,11 +405,11 @@
             </table>
 
             <div class="cart-summary">
-                <p>Celkem bez DPH: 1 422 Kč</p>                     @*      -------------------------------------------------------------------- *@
-                <p><strong>Celkem: 1 800 Kč</strong></p>
+                <p>Celkem bez DPH: @(Model.Sum(x => x.Price).ToString("F2")) Kč</p>
+            <p><strong>Celkem: @((Model.Sum(x => x.Price) * 1.15m).ToString("F2")) Kč</strong></p>
                 <div class="space">
                     <a class="pay-button" href="@Url.Action("Index", "Products")">Zpět k nákupu</a>
-                    <a class="pay-button" href="@Url.Action("Order", "Cart")">Pokračovat</a>
+                    <button type="submit" class="pay-button" href="@Url.Action("Order", "Cart")">Pokračovat</button>
                 </div>
             </div>
         </div>
@@ -441,7 +424,7 @@
                 </path>
             </svg>
         </div>
-    </section>
+    </form>
 
     <!-- FOOTER -->
     <footer class="border-top footer text-muted">
